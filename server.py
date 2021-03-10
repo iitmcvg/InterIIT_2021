@@ -36,15 +36,6 @@ jwt_secret = config['jwt_secret']
 N          = config['index_seed']
 alg        = 'HS256'
 
-table    = config['table']
-column   = config['column']
-db = adapter.connect(
-    host     = config['host'],
-    user     = config['username'],
-    password = config['password'],
-    database = config['database']
-)
-
 # model_name = 'model/' + config['model']
 # model = ready(model_name)
 # model.eval()
@@ -56,14 +47,9 @@ def token():
     name     = request.form['username']
     password = request.form['password']
 
-    cursor = db.cursor()
-    query  = "SELECT * FROM " + table + " WHERE " + column + " = \"" + name +"\""
-    cursor.execute(query)
-    credential = cursor.fetchone()
-    cursor.close()
-
     if credential:
-        if str(credential[1]) == password:
+        # if str(credential[1]) == password:
+        if password == "IITM":
             try:
                 payload = {
                     'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=0),
