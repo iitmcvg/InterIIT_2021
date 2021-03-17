@@ -8,7 +8,6 @@ import warnings
 import argparse
 import logging
 import yaml
-import mysql.connector as adapter
 
 from flask           import Flask, request
 from flask_cors      import CORS
@@ -35,6 +34,8 @@ socketio = SocketIO(app, cors_allowed_origins='*', logger=True)
 jwt_secret = config['jwt_secret']
 N          = config['index_seed']
 alg        = 'HS256'
+
+imgdir = './dataset/images/'
 
 # model_name = 'model/' + config['model']
 # model = ready(model_name)
@@ -76,26 +77,34 @@ def token():
 def handler(path):
     return app.send_static_file('index.html')
 
-@socketio.on('send')
-def handle_input(json):
+@socketio.on('auglist')
+def handle_input():
 
-    try:
-        token = json['token']
-    except:
-        return emit('receive', '400 : Token Absent')
+    # try:
+    #     token = json['token']
+    # except:
+    #     return emit('receive', '400 : Token Absent')
     
-    if token is not None:
-        try:
-            token   = bytes(token, 'utf-8')
-            payload = jwt.decode(token, jwt_secret,algorithms=alg)
-            idx     = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for i in range(N))
-            print('Hi')
+    # if token is not None:
+    #     try:
+    #         token   = bytes(token, 'utf-8')
+    #         payload = jwt.decode(token, jwt_secret,algorithms=alg)
+    #         idx     = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for i in range(N))
+    #         print('Hi')
 
-        except jwt.ExpiredSignatureError:
-            return emit('receive','401 : Signature expired. Please log in again.')
-        except jwt.InvalidTokenError:
-            emit('receive','402 : Invalid token. Please log in again.')
-            disconnect()
+    #     except jwt.ExpiredSignatureError:
+    #         return emit('receive','401 : Signature expired. Please log in again.')
+    #     except jwt.InvalidTokenError:
+    #         emit('receive','402 : Invalid token. Please log in again.')
+    #         disconnect()
+
+    for i in os.listdir(imgdir):
+        r = open(imgdir+i, 'rb')
+        data = r.read()
+        emit('auglist', data)
+        r.close()
+
+    return 1
 
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = config['socket_secret']
