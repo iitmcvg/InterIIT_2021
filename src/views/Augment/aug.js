@@ -3,8 +3,10 @@ import {
     Grid
 } from '@material-ui/core'
 
-import Controls from '../../components/Controls'
-import CardGrid from '../../components/CardGrid'
+import StepperControl from './stepper'
+import Controls from './controls'
+import ImageGrid from './imagegrid'
+
 import { socket } from '../../components/Socket'
 
 export default class Augment extends React.Component {
@@ -41,14 +43,17 @@ export default class Augment extends React.Component {
 
     render() {
         return (
-            <Grid container spacing={0}>
-                <Grid item xs={8}>
-                    <Controls />
+            <div>
+                <StepperControl />
+                <Grid container spacing={0}>
+                    <Grid item xs={8}>
+                        <Controls />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <ImageGrid images={this.state.images} />
+                    </Grid>
                 </Grid>
-                <Grid item xs={4}>
-                    <CardGrid images={this.state.images} />
-                </Grid>
-            </Grid>
+            </div>
         )
     }
 }

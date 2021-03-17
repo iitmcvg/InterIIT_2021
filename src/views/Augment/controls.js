@@ -41,13 +41,18 @@ export default class Controls extends React.Component {
 
         return (
             <div>
-                <div style={{ padding: '10%', paddingLeft: '20%', paddingRight: '20%' }}>
+                <div
+                    style={{
+                        padding: '10%',
+                        paddingLeft: '20%',
+                        paddingRight: '20%'
+                    }}>
                     {
                         features.map((item, index) => {
                             return (
                                 <div key={index}>
-                                    <Typography>
-                                        {item.disp} : {this.state && this.state[item.name]}
+                                    <Typography style={{ fontFamily: 'Proxima Reg, sans-serif' }}>
+                                        {item.disp} : {this.state && this.state[item.name]}{!this.state && item.def}{this.state && !this.state[item.name] && item.def}
                                     </Typography>
                                     <Slider
                                         getAriaValueText={valuetext}
@@ -59,7 +64,7 @@ export default class Controls extends React.Component {
                                         id={item.name}
                                         onChangeCommitted={this.handleChange}
                                         valueLabelDisplay="auto"
-                                        marks={[{value: item.min, label: item.min}, {value: item.max, label: item.max} ]}
+                                        marks={[{ value: item.min, label: item.min }, { value: item.max, label: item.max }]}
                                     />
                                 </div>
                             )

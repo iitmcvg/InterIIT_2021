@@ -23,7 +23,7 @@ const NavBar = (props) => {
   return (
     <div
       style={{
-        fontFamily: 'Proxima EBold,sans-serif'
+        fontFamily: 'Proxima Bold,sans-serif'
       }}
     >
       <Navbar style={{ backgroundColor: 'inherit' }} light expand='md'>
