@@ -9,3 +9,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: 'Proxima EBold';
+  src: url('./assets/Proxima\ Nova\ Extrabold.otf')
+}
