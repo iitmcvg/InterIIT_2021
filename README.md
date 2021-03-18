@@ -7,4 +7,4 @@ https://drive.google.com/file/d/1-4gji4W4_RsPCm4mf2qfHZtuM9yCzGco/view?usp=shari
 
 Link for dataset zip file (GTSRB):
 
-https://drive.google.com/file/d/1xdSdMp-Q1DYZEexFbvL3j10irUJyOk2P/view?usp=sharing
+https://drive.google.com/file/d/1cn-Gcp9iPZHdoLLsKeRO31PxeaOlcn98/view?usp=sharing
