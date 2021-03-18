@@ -8,6 +8,7 @@ import warnings
 import argparse
 import logging
 import yaml
+import csv
 
 from flask           import Flask, request
 from flask_cors      import CORS
@@ -36,6 +37,7 @@ N          = config['index_seed']
 alg        = 'HS256'
 
 imgdir = './dataset/images/'
+dsdir = './data/'
 
 # model_name = 'model/' + config['model']
 # model = ready(model_name)
@@ -71,11 +73,20 @@ def token():
         return '404 : User not found'
 
 
-
 @app.route('/', defaults={'path': ''})
 @app.route('/<path>')
 def handler(path):
     return app.send_static_file('index.html')
+
+@socketio.on('dirlist')
+def handle_input():
+    classnames = []
+    sublist = os.listdir(dsdir)
+    with open('signnames.csv') as file:
+        reader = csv.DictReader(file, delimiter=',')
+        for index, row in enumerate(reader):
+            classnames.append({'name':row['SignName'], 'num':len(os.listdir(dsdir+sublist[index]))})
+    return emit('dirlist', classnames)        
 
 @socketio.on('auglist')
 def handle_input():
