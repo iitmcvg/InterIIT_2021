@@ -5,16 +5,16 @@ import { createBrowserHistory } from 'history';
 import NavBar from '../components/NavBar';
 import Results from '../components/Results';
 
-import Home from '../views/Home/Home';
-import CardGrid from '../components/CardGrid';
 import Login from '../views/Login/Login';
+import Augment from '../views/Augment/aug'
 
 var hist = createBrowserHistory();
 
 var routes = [
-  { path: '/', component: Home },
-  { path: '/auth', component: Login },
+  { path: '/', component: Augment },
+  { path: '/augment', component: Augment },
   { path: '/results', component: Results },
+  { path: '/auth', component: Login },
 ];
 
 export default class App extends React.Component {
@@ -22,21 +22,22 @@ export default class App extends React.Component {
     return (
       <div>
         <NavBar />
-        <Router history={hist}>
-          <Switch>
-            {routes.map((prop, key) => {
-              return (
-                <Route
-                  exact
-                  path={prop.path}
-                  key={key}
-                  component={prop.component}
-                />
-              );
-            })}
-          </Switch>
-        </Router>
-        <CardGrid />
+        <div style={{marginTop:'10px'}}>
+          <Router history={hist}>
+            <Switch>
+              {routes.map((prop, key) => {
+                return (
+                  <Route
+                    exact
+                    path={prop.path}
+                    key={key}
+                    component={prop.component}
+                  />
+                );
+              })}
+            </Switch>
+          </Router>
+        </div>
       </div>
     );
   }

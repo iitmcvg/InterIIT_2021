@@ -9,3 +9,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: 'Proxima Bold';
+  src: url('./assets/Proxima\ Nova\ Bold.otf')
+}
+@font-face {
+  font-family: 'Proxima Reg';
+  src: url('./assets/ProximaNova-Regular.otf')
+}

@@ -15,22 +15,20 @@ const NavBar = (props) => {
   const toggle = () => setIsOpen(!isOpen);
   const list = () => {
     return [
-      { path: '/auth', name: 'Token' },
-      { path: '/Results', name: 'Results' },
+      { path: '/augment', name: 'AUGMENT' },
+      { path: '/results', name: 'RESULTS' },
+      { path: '/auth', name: 'TOKEN' },
     ];
   };
   return (
     <div
       style={{
-        fontFamily: 'Riona Sans,sans-serif',
-        fontWeight: 'bolder',
-        fontStyle: 'italic',
-        backgroundColor: '#047BD5',
+        fontFamily: 'Proxima Bold,sans-serif'
       }}
     >
       <Navbar style={{ backgroundColor: 'inherit' }} light expand='md'>
-        <NavbarBrand href='/' style={{ color: 'white' }}>
-          Inter-IIT Tech Meet 9.0
+        <NavbarBrand href='/' style={{ color: '#E00420' }}>
+          INTER - IIT TECH MEET 9.0
         </NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
@@ -41,7 +39,7 @@ const NavBar = (props) => {
                 key={key}
                 style={{ marginLeft: '10px' }}
               >
-                <NavLink href={data.path} style={{ color: 'white' }}>
+                <NavLink href={data.path} style={{ color: '#E00420' }}>
                   {data.name}
                 </NavLink>
               </NavItem>
