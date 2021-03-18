@@ -4,55 +4,58 @@ import {
 } from '@material-ui/core'
 
 import StepperControl from './stepper'
+import Dir from './dir'
 import Controls from './controls'
 import ImageGrid from './imagegrid'
 
-import { socket } from '../../components/Socket'
 
 export default class Augment extends React.Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            images: []
+            images: [],
+            active: localStorage.getItem('page') ? parseInt(localStorage.getItem('page')) : 0,
+            canProceed: false
         }
+        this.setActive = this.setActive.bind(this)
+        this.getProceed = this.getProceed.bind(this)
     }
 
-    getData = (data) => {
-        if (typeof (data) === 'string') {
-            alert(data)
-            window.location.href = '/auth'
-        }
-        else {
-            const blob = new Blob([data], { type: 'image/png' })
-            var newlist = this.state.images
-            newlist.push(blob)
-            this.setState({
-                images: newlist
-            })
-        }
+    getProceed = () => {
+        return this.state.canProceed
+    }
+    setProceed = (flag) => {
+        this.setState({
+            canProceed: flag
+        })
     }
 
-    componentDidMount() {
-        socket.on('auglist', this.getData)
-        socket.emit('auglist')
-    }
-    componentWillUnmount() {
-        socket.off('auglist')
+    setActive = (flag) => {
+        this.setState({
+            active: flag,
+            canProceed: false
+        })
     }
 
     render() {
         return (
             <div>
-                <StepperControl />
-                <Grid container spacing={0}>
-                    <Grid item xs={8}>
-                        <Controls />
+                <StepperControl switch={this.setActive} flag={this.getProceed} />
+                {
+                    this.state.active === 0 &&
+                    <Dir switch={this.setProceed} />
+                }
+                { this.state.active === 1 &&
+                    <Grid style={{ marginTop: '10px' }} container spacing={0}>
+                        <Grid item xs={8}>
+                            <Controls switch={this.setProceed} />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <ImageGrid />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={4}>
-                        <ImageGrid images={this.state.images} />
-                    </Grid>
-                </Grid>
+                }
             </div>
         )
     }
