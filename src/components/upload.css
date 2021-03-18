@@ -1,0 +1,96 @@
+.mg20 {
+  margin: 20px;
+}
+
+.my20 {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.mr20 {
+  margin-right: 20px;
+}
+
+.container {
+  position: relative;
+  width: 600px;
+  margin: auto;
+}
+
+.preview {
+  position: relative;
+  max-width: 200px;
+}
+
+.btn-upload {
+  position: absolute !important;
+  right: 10px;
+}
+
+.file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 300px;
+  vertical-align: middle;
+}
+
+.list-group {
+  padding: 0;
+  margin: 0;
+}
+
+.list-header {
+  margin-top: 10px !important;
+}
+
+.upload-message {
+  font-weight: bold;
+  color: #63a84e;
+}
+
+.upload-message.error {
+  color: #da4148;
+}
+
+.btn-choose {
+  margin-right: 10px !important;
+}
+
+.split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 50px;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+/* Control the left side */
+.left {
+  top: 0;
+  background-color: rgb(247, 247, 247);
+}
+
+/* Control the right side */
+.right {
+  bottom: 0;
+  background-color: rgb(135, 240, 205);
+}
+
+/* If you want the content centered horizontally and vertically */
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* Style the image inside the centered container, if needed */
+.centered img {
+  width: 150px;
+  border-radius: 50%;
+}
