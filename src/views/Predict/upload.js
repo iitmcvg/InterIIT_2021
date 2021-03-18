@@ -1,28 +1,27 @@
 import React, { Component } from 'react';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import {
-  Box,
-  Typography,
   Button,
-  ListItem,
-  withStyles,
+  // Box,
+  // Typography,
+  // withStyles,
+  // LinearProgress
 } from '@material-ui/core';
 
-import UploadService from '../services/upload-files.service';
+import { socket } from '../../components/Socket'
 
-const BorderLinearProgress = withStyles((theme) => ({
-  root: {
-    height: 15,
-    borderRadius: 5,
-  },
-  colorPrimary: {
-    backgroundColor: '#EEEEEE',
-  },
-  bar: {
-    borderRadius: 5,
-    backgroundColor: '#1a90ff',
-  },
-}))(LinearProgress);
+// const BorderLinearProgress = withStyles((theme) => ({
+//   root: {
+//     height: 15,
+//     borderRadius: 5,
+//   },
+//   colorPrimary: {
+//     backgroundColor: '#EEEEEE',
+//   },
+//   bar: {
+//     borderRadius: 5,
+//     backgroundColor: '#1a90ff',
+//   },
+// }))(LinearProgress);
 
 export default class UploadImages extends Component {
   constructor(props) {
@@ -37,16 +36,11 @@ export default class UploadImages extends Component {
 
       message: '',
       isError: false,
-      imageInfos: [],
     };
   }
 
   componentDidMount() {
-    UploadService.getFiles().then((response) => {
-      this.setState({
-        imageInfos: response.data,
-      });
-    });
+    socket.on('predict', (data) => { console.log(data) })
   }
 
   selectFile(event) {
@@ -62,42 +56,25 @@ export default class UploadImages extends Component {
     this.setState({
       progress: 0,
     });
-
-    UploadService.upload(this.state.currentFile, (event) => {
-      this.setState({
-        progress: Math.round((100 * event.loaded) / event.total),
+    console.log(this.state.currentFile)
+    var fileReader = new FileReader();
+    var file = this.state.currentFile
+    fileReader.readAsDataURL(file)
+    fileReader.onload = () => {
+      var arrayBuffer = fileReader.result;
+      socket.emit('predict', {
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        binary: arrayBuffer
       });
-    })
-      .then((response) => {
-        this.setState({
-          message: response.data.message,
-          isError: false,
-        });
-        return UploadService.getFiles();
-      })
-      .then((files) => {
-        this.setState({
-          imageInfos: files.data,
-        });
-      })
-      .catch((err) => {
-        this.setState({
-          progress: 0,
-          message: 'Could not upload the image!',
-          currentFile: undefined,
-          isError: true,
-        });
-      });
+    }
   }
 
   render() {
     const {
       currentFile,
-      previewImage,
-      progress,
-      message,
-      imageInfos,
-      isError,
+      previewImage
     } = this.state;
 
     return (
@@ -127,7 +104,7 @@ export default class UploadImages extends Component {
           Upload
         </Button>
 
-        {currentFile && (
+        {/* {currentFile && (
           <Box className='my20' display='flex' alignItems='center'>
             <Box width='100%' mr={1}>
               <BorderLinearProgress variant='determinate' value={progress} />
@@ -139,7 +116,7 @@ export default class UploadImages extends Component {
               >{`${progress}%`}</Typography>
             </Box>
           </Box>
-        )}
+        )} */}
 
         {previewImage && (
           <div>
@@ -147,32 +124,14 @@ export default class UploadImages extends Component {
           </div>
         )}
 
-        {message && (
+        {/* {message && (
           <Typography
             variant='subtitle2'
             className={`upload-message ${isError ? 'error' : ''}`}
           >
             {message}
           </Typography>
-        )}
-
-        <Typography variant='h6' className='list-header'>
-          List of Images
-        </Typography>
-        <ul className='list-group'>
-          {imageInfos &&
-            imageInfos.map((image, index) => (
-              <ListItem divider key={index}>
-                <img
-                  src={image.url}
-                  alt={image.name}
-                  height='80px'
-                  className='mr20'
-                />
-                <a href={image.url}>{image.name}</a>
-              </ListItem>
-            ))}
-        </ul>
+        )} */}
       </div>
     );
   }

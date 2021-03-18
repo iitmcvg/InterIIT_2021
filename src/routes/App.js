@@ -3,17 +3,17 @@ import { Router, Route, Switch } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 
 import NavBar from '../components/NavBar';
-import Results from '../components/Results';
 
 import Login from '../views/Login/Login';
-import Augment from '../views/Augment/aug'
+import Augment from '../views/Augment/augment'
+import Predict from '../views/Predict/predict';
 
 var hist = createBrowserHistory();
 
 var routes = [
   { path: '/', component: Augment },
   { path: '/augment', component: Augment },
-  { path: '/results', component: Results },
+  { path: '/validate', component: Predict },
   { path: '/auth', component: Login },
 ];
 

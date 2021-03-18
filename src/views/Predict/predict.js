@@ -1,10 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import * as d3 from 'd3';
-import './upload.css';
-import { Typography } from '@material-ui/core';
-import UploadImages from './upload-images.component';
 
-class BarChart extends Component {
+import { Typography } from '@material-ui/core';
+
+import UploadImages from './upload';
+import './upload.css';
+
+
+class BarChart extends React.Component {
   componentDidMount() {
     const data = [
       [
