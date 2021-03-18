@@ -78,6 +78,10 @@ def token():
 def handler(path):
     return app.send_static_file('index.html')
 
+@socketio.on('predict')
+def handle_input(images):
+    return emit('predict','Hi')
+
 @socketio.on('dirlist')
 def handle_input():
     classnames = []
@@ -90,24 +94,6 @@ def handle_input():
 
 @socketio.on('auglist')
 def handle_input():
-
-    # try:
-    #     token = json['token']
-    # except:
-    #     return emit('receive', '400 : Token Absent')
-    
-    # if token is not None:
-    #     try:
-    #         token   = bytes(token, 'utf-8')
-    #         payload = jwt.decode(token, jwt_secret,algorithms=alg)
-    #         idx     = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for i in range(N))
-    #         print('Hi')
-
-    #     except jwt.ExpiredSignatureError:
-    #         return emit('receive','401 : Signature expired. Please log in again.')
-    #     except jwt.InvalidTokenError:
-    #         emit('receive','402 : Invalid token. Please log in again.')
-    #         disconnect()
 
     for i in os.listdir(imgdir):
         r = open(imgdir+i, 'rb')
