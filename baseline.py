@@ -19,7 +19,6 @@ NUM_CLASSES = 43
 IMG_SIZE = 48
 
 def read_train_data():
-    print('wegfgd')
     dir = r'C:\Users\Shreyas\PycharmProjects\inter-IIT\archive'
     df1 = pd.read_csv(dir + '\\' + 'Train_augmented.csv')
     paths = df1['Path']
