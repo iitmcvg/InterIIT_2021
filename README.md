@@ -8,3 +8,8 @@ https://drive.google.com/file/d/1-4gji4W4_RsPCm4mf2qfHZtuM9yCzGco/view?usp=shari
 Link for dataset zip file (GTSRB):
 
 https://drive.google.com/file/d/1cn-Gcp9iPZHdoLLsKeRO31PxeaOlcn98/view?usp=sharing
+
+Link to augmented dataset :
+
+https://drive.google.com/file/d/1gPvyT-YcVTakygz0bzHF0Ucw1skYqvCe/view?usp=sharing
+
