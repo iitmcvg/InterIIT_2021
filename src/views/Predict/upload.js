@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import {
   Button,
   // Box,
@@ -6,8 +6,10 @@ import {
   // withStyles,
   // LinearProgress
 } from '@material-ui/core';
+import { BoxLoading } from 'react-loadingg';
 
-import { socket } from '../../components/Socket'
+import { socket } from '../../components/Socket';
+import { resolve } from 'q';
 
 // const BorderLinearProgress = withStyles((theme) => ({
 //   root: {
@@ -36,11 +38,14 @@ export default class UploadImages extends Component {
 
       message: '',
       isError: false,
+      loader: true,
     };
   }
 
   componentDidMount() {
-    socket.on('predict', (data) => { console.log(data) })
+    socket.on('predict', (data) => {
+      console.log(data);
+    });
   }
 
   selectFile(event) {
@@ -56,26 +61,36 @@ export default class UploadImages extends Component {
     this.setState({
       progress: 0,
     });
-    console.log(this.state.currentFile)
+    document.getElementById('loader').classList.remove('close');
+    document.getElementById('loader').classList.add('open');
+    console.log(this.state.currentFile);
     var fileReader = new FileReader();
-    var file = this.state.currentFile
-    fileReader.readAsDataURL(file)
+    var file = this.state.currentFile;
+    fileReader.readAsDataURL(file);
     fileReader.onload = () => {
       var arrayBuffer = fileReader.result;
       socket.emit('predict', {
         name: file.name,
         type: file.type,
         size: file.size,
-        binary: arrayBuffer
+        binary: arrayBuffer,
       });
-    }
+    };
+    this.getImgData();
+    // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, 3000));
+    // document.getElementById('loader').classList.remove('open');
+    // document.getElementById('loader').classList.add('close');
+  }
+  getImgData() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({});
+      }, 3000);
+    });
   }
 
   render() {
-    const {
-      currentFile,
-      previewImage
-    } = this.state;
+    const { currentFile, previewImage } = this.state;
 
     return (
       <div className='mg20'>
@@ -103,6 +118,9 @@ export default class UploadImages extends Component {
         >
           Upload
         </Button>
+        <div id='loader' class='close'>
+          <BoxLoading />
+        </div>
 
         {/* {currentFile && (
           <Box className='my20' display='flex' alignItems='center'>

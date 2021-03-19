@@ -6,7 +6,6 @@ import { Typography } from '@material-ui/core';
 import UploadImages from './upload';
 import './upload.css';
 
-
 class BarChart extends React.Component {
   componentDidMount() {
     const data = [
@@ -70,31 +69,6 @@ class BarChart extends React.Component {
       .domain([0, d3.max(data, (d) => d.value)])
       .nice()
       .range([canvasHeight - margin.bottom, margin.top]);
-    const svgCanvas = d3
-      .select(this.refs.canvas)
-      .append('svg')
-      .attr('width', 800)
-      .attr('height', 400)
-      .style('border', '1px solid black');
-    svgCanvas
-      .append('g')
-      .attr('fill', 'orange')
-      .selectAll('rect')
-      .data(data)
-      .join('rect')
-      .attr('x', (d, i) => x(i))
-      .attr('y', (d) => y(d.value))
-      .attr('height', (d) => y(0) - y(d.value))
-      .attr('width', x.bandwidth());
-
-    svgCanvas
-      .selectAll('text')
-      .data(data)
-      .enter()
-      .append('text')
-      .attr('x', (dataPoint, i) => i * 45 + 10)
-      .attr('y', (dataPoint, i) => canvasHeight - dataPoint * scale - 10)
-      .text((dataPoint) => dataPoint);
     const yAxis = (g) =>
       g
         .attr('transform', `translate(${margin.left},0)`)
@@ -116,19 +90,43 @@ class BarChart extends React.Component {
           .tickFormat((i) => data[i].name)
           .tickSizeOuter(0)
       );
+
+    const svgCanvas = d3
+      .select(this.refs.canvas)
+      .append('svg')
+      .attr('width', canvasWidth)
+      .attr('height', canvasHeight)
+      .attr('class', 'tile')
+      .attr('viewBox', [0, 0, canvasWidth, canvasHeight]);
+    // .style('border', '1px solid black');
+    svgCanvas
+      .append('g')
+      .attr('fill', 'red')
+      .selectAll('rect')
+      .data(data)
+      .join('rect')
+      .attr('x', (d, i) => x(i))
+      .attr('y', (d) => y(d.value))
+      .attr('height', (d) => y(0) - y(d.value))
+      .attr('width', x.bandwidth());
+
     svgCanvas.append('g').call(xAxis);
 
     svgCanvas.append('g').call(yAxis);
   }
   render() {
-    return <div ref='canvas'></div>;
+    return (
+      // <div class='tile'>
+      <div ref='canvas'></div>
+      // </div>
+    );
   }
 }
 
 const Results = () => {
   return (
     <div>
-      <div class='left'>
+      <div class='top'>
         {/* <div class='centered'> */}
         <div className='container'>
           <div className='mg20'>
@@ -139,11 +137,13 @@ const Results = () => {
         {/* </div> */}
       </div>
 
-      <div class='right'>
-        {/* <div class='centered'> */}
-        <h1>Results</h1>
-        <BarChart />
-        {/* </div> */}
+      <div class='bottom'>
+        <div class='centered'>
+          <h1>Results</h1>
+          <div class='grid-layout'>
+            <BarChart />
+          </div>
+        </div>
       </div>
     </div>
   );

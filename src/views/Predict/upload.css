@@ -69,23 +69,23 @@
 }
 
 /* Control the left side */
-.left {
+.top {
   top: 0;
   background-color: rgb(247, 247, 247);
 }
 
 /* Control the right side */
-.right {
+.bottom {
   bottom: 0;
-  background-color: rgb(135, 240, 205);
+  background-color: rgb(255, 255, 255);
 }
 
 /* If you want the content centered horizontally and vertically */
 .centered {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
+  /* top: 50%; */
+  /* left: 50%; */
+  /* transform: translate(-50%, 10px); */
   text-align: center;
 }
 
@@ -93,4 +93,29 @@
 .centered img {
   width: 150px;
   border-radius: 50%;
+}
+.close {
+  display: none;
+}
+.open {
+  display: block;
+  position: relative;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  margin-left: 30px;
+  padding-bottom: 20px;
+  padding-top: 20px;
+}
+.grid-layout {
+  width: 1000px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 1000px);
+  grid-gap: 10px;
+  justify-content: center;
+}
+.tile {
+  display: inline-block;
+  /* border: 5px solid #000; */
+  height: 400px;
+  /* width: 300px; */
 }
