@@ -1,7 +1,11 @@
 import React from 'react'
 import {
-    Slider, Typography
+    Slider,
+    Card,
+    Typography
 } from '@material-ui/core'
+
+import { list } from './controls_list'
 
 export default class Controls extends React.Component {
     constructor(props) {
@@ -20,24 +24,6 @@ export default class Controls extends React.Component {
         function valuetext(input) {
             return input
         }
-        const features = [
-            {
-                disp: "Scaling",
-                name: "scale",
-                min: 0,
-                max: 1,
-                step: 0.01,
-                def: 0
-            },
-            {
-                disp: "Rotating",
-                name: "rotate",
-                min: -359,
-                max: 359,
-                step: 1,
-                def: 0
-            },
-        ]
 
         return (
             <div>
@@ -45,33 +31,44 @@ export default class Controls extends React.Component {
                     style={{
                         padding: '10%',
                         paddingLeft: '20%',
-                        paddingRight: '20%'
+                        paddingRight: '20%',
                     }}>
                     {
-                        features.map((item, index) => {
+                        list.map((cat, i) => {
                             return (
-                                <div key={index}>
-                                    <Typography style={{ fontFamily: 'Proxima Reg, sans-serif' }}>
-                                        {item.disp} : {this.state && this.state[item.name]}{!this.state && item.def}{this.state && !this.state[item.name] && item.def}
+                                <Card key={i} style={{ padding: '10%' }}>
+                                    <Typography style={{ fontFamily: 'Proxima Reg, sans-serif', fontSize: '30px', color:'#E00420' }}>
+                                        {cat['categ']}
                                     </Typography>
-                                    <Slider
-                                        getAriaValueText={valuetext}
-                                        aria-labelledby="discrete-slider-small-steps"
-                                        step={item.step}
-                                        defaultValue={item.def}
-                                        min={item.min}
-                                        max={item.max}
-                                        id={item.name}
-                                        onChangeCommitted={this.handleChange}
-                                        valueLabelDisplay="auto"
-                                        marks={[{ value: item.min, label: item.min }, { value: item.max, label: item.max }]}
-                                    />
-                                </div>
+                                    {
+                                        cat['list'].map((item, index) => {
+                                            return (
+                                                <div key={index}>
+                                                    <Typography style={{ fontFamily: 'Proxima Reg, sans-serif' }}>
+                                                        {item.disp} : {this.state && this.state[item.name]}{!this.state && item.def}{this.state && !this.state[item.name] && item.def}
+                                                    </Typography>
+                                                    <Slider
+                                                        getAriaValueText={valuetext}
+                                                        aria-labelledby="discrete-slider-small-steps"
+                                                        step={item.step}
+                                                        defaultValue={item.def}
+                                                        min={item.min}
+                                                        max={item.max}
+                                                        id={item.name}
+                                                        onChangeCommitted={this.handleChange}
+                                                        valueLabelDisplay="auto"
+                                                        marks={[{ value: item.min, label: item.min }, { value: item.max, label: item.max }]}
+                                                    />
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </Card>
                             )
                         })
                     }
                 </div>
-            </div>
+            </div >
         )
     }
 }

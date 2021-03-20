@@ -47,11 +47,11 @@ export default class Augment extends React.Component {
                     <Dir switch={this.setProceed} />
                 }
                 { this.state.active === 1 &&
-                    <Grid style={{ marginTop: '10px' }} container spacing={0}>
-                        <Grid item xs={8}>
+                    <Grid style={{ marginTop: '10px' }} container>
+                        <Grid item xs={6}>
                             <Controls switch={this.setProceed} />
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={6} style={{ height: '500px', overflowY: 'scroll' }}>
                             <ImageGrid />
                         </Grid>
                     </Grid>
