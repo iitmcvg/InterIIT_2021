@@ -6,6 +6,104 @@ import { Typography } from '@material-ui/core';
 import UploadImages from './upload';
 import './upload.css';
 
+class PieBarChart extends React.Component {
+  componentDidMount() {
+    const data = [
+      { name: 'speed (80)', value: '1500' },
+      { name: 'speed (70)', value: '1200' },
+      { name: 'speed (60)', value: '900' },
+      { name: 'speed (50)', value: '800' },
+      { name: 'speed (90)', value: '300' },
+      { name: 'U Turn', value: '495' },
+      { name: 'No Parking', value: '150' },
+      { name: 'Signal1', value: '795' },
+      { name: 'Signal 2', value: '540' },
+      { name: 'Police', value: '122' },
+      { name: 'Signal 3', value: '1100' },
+      { name: 'Left', value: '340' },
+      { name: 'Right', value: '640' },
+      { name: 'Side', value: '874' },
+    ];
+    this.drawPieChart(data);
+  }
+  drawPieChart(data) {
+    const width = 1500;
+    const height = 500;
+    const radius = (Math.min(width, height) / 2) * 0.8;
+    const arc = d3
+      .arc()
+      .innerRadius(0)
+      .outerRadius(Math.min(width, height) / 2 - 1);
+    const arcLabel = d3.arc().innerRadius(radius).outerRadius(radius);
+
+    const outerRadius = Math.min(width, height) / 2;
+
+    const pie = d3
+      .pie()
+      .sort(null)
+      .value((d) => d.value);
+    const color = d3
+      .scaleOrdinal()
+      .domain(data.map((d) => d.name))
+      .range(
+        d3
+          .quantize((t) => d3.interpolateSpectral(t * 0.8 + 0.1), data.length)
+          .reverse()
+      );
+    const arcs = pie(data);
+
+    const svg = d3
+      .select(this.refs.canvas)
+      .append('svg')
+      .attr('viewBox', [-width / 2, -height / 2, width, height]);
+
+    svg
+      .append('g')
+      .attr('stroke', 'white')
+      .selectAll('path')
+      .data(arcs)
+      .join('path')
+      .attr('fill', (d) => color(d.data.name))
+      .attr('d', arc)
+      .append('title')
+      .text((d) => `${d.data.name}: ${d.data.value.toLocaleString()}`);
+
+    svg
+      .append('g')
+      .attr('font-family', 'sans-serif')
+      .attr('font-size', 12)
+      .attr('text-anchor', 'middle')
+      .selectAll('text')
+      .data(arcs)
+      .join('text')
+      .attr('transform', (d) => `translate(${arcLabel.centroid(d)})`)
+      .call((text) =>
+        text
+          .append('tspan')
+          .attr('y', '-0.4em')
+          .attr('font-weight', 'bold')
+          .text((d) => d.data.name)
+      )
+      .call((text) =>
+        text
+          .filter((d) => d.endAngle - d.startAngle > 0.25)
+          .append('tspan')
+          .attr('x', 0)
+          .attr('y', '0.7em')
+          .attr('fill-opacity', 0.7)
+          .text((d) => d.data.value.toLocaleString())
+      );
+
+    return svg.node();
+  }
+  render() {
+    return (
+      // <div class='tile'>
+      <div ref='canvas'></div>
+      // </div>
+    );
+  }
+}
 class BarChart extends React.Component {
   componentDidMount() {
     const data = [
@@ -50,13 +148,33 @@ class BarChart extends React.Component {
     ];
 
     for (let datas of data) {
+      datas = this.pyramid(datas);
       this.drawBarChart(datas);
     }
   }
+  pyramid(arr) {
+    var newArr = [];
+
+    // sort numerically
+    arr.sort(function (a, b) {
+      return a - b;
+    });
+
+    // put the biggest in new array
+    newArr.push(arr.pop());
+
+    // keep grabbing the biggest remaining item and alternate
+    // between pushing and unshifting onto the new array
+    while (arr.length) {
+      newArr[arr.length % 2 === 0 ? 'push' : 'unshift'](arr.pop());
+    }
+
+    return newArr;
+  }
   drawBarChart(data) {
-    const canvasHeight = 300;
-    const canvasWidth = 400;
-    const scale = 20;
+    const canvasHeight = 400;
+    const canvasWidth = 600;
+    const scale = 1;
     const margin = { top: 30, right: 0, bottom: 0, left: 40 };
 
     const x = d3
@@ -97,7 +215,7 @@ class BarChart extends React.Component {
       .attr('width', canvasWidth)
       .attr('height', canvasHeight)
       .attr('class', 'tile')
-      .attr('viewBox', [0, 0, canvasWidth, canvasHeight]);
+      .attr('viewBox', [0, 0, canvasWidth * scale, canvasHeight * scale]);
     // .style('border', '1px solid black');
     svgCanvas
       .append('g')
@@ -108,12 +226,15 @@ class BarChart extends React.Component {
       .attr('x', (d, i) => x(i))
       .attr('y', (d) => y(d.value))
       .attr('height', (d) => y(0) - y(d.value))
-      .attr('width', x.bandwidth());
+      .attr('width', x.bandwidth())
+      .append('title')
+      .text((d) => `${d.value} `);
 
     svgCanvas.append('g').call(xAxis);
 
     svgCanvas.append('g').call(yAxis);
   }
+
   render() {
     return (
       // <div class='tile'>
@@ -140,6 +261,7 @@ const Results = () => {
       <div class='bottom'>
         <div class='centered'>
           <h1>Results</h1>
+          <PieBarChart />
           <div class='grid-layout'>
             <BarChart />
           </div>
