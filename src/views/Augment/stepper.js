@@ -43,7 +43,7 @@ export default class StepperControl extends React.Component {
                 >
                     Back
                 </Button>
-                <Stepper activeStep={this.state.active} style={{ width: '40%', padding: 0 }}>
+                <Stepper activeStep={this.state.active} style={{ width: '40%', padding: 0, marginLeft: '30px', marginRight:'30px' }}>
                     {this.steps.map((label, index) => {
                         return (
                             <Step key={index}>

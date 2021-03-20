@@ -40,3 +40,7 @@ code {
 .MuiSlider-root{
   color: #E00420 !important;
 }
+
+.MuiTypography-body2{
+  font-family: 'Proxima Reg' !important;
+}

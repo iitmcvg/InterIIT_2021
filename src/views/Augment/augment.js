@@ -48,10 +48,10 @@ export default class Augment extends React.Component {
                 }
                 { this.state.active === 1 &&
                     <Grid style={{ marginTop: '10px' }} container>
-                        <Grid item xs={6}>
+                        <Grid item xs={4} style={{ height: '500px', overflowY: 'scroll' }}>
                             <Controls switch={this.setProceed} />
                         </Grid>
-                        <Grid item xs={6} style={{ height: '500px', overflowY: 'scroll' }}>
+                        <Grid item xs={8} style={{ height: '500px', overflowY: 'scroll' }}>
                             <ImageGrid />
                         </Grid>
                     </Grid>

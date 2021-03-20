@@ -31,15 +31,16 @@ export default class Controls extends React.Component {
                     style={{
                         padding: '10%',
                         paddingLeft: '20%',
-                        paddingRight: '20%',
+                        paddingRight: '20%'
                     }}>
                     {
                         list.map((cat, i) => {
                             return (
-                                <Card key={i} style={{ padding: '10%' }}>
+                                <Card key={i} style={{ padding: '10%' }} variant="outlined">
                                     <Typography style={{ fontFamily: 'Proxima Reg, sans-serif', fontSize: '30px', color:'#E00420' }}>
                                         {cat['categ']}
                                     </Typography>
+                                    <br />
                                     {
                                         cat['list'].map((item, index) => {
                                             return (
