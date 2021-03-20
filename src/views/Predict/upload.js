@@ -76,10 +76,13 @@ export default class UploadImages extends Component {
         binary: arrayBuffer,
       });
     };
-    this.getImgData();
+
+    // this.getImgData();
     // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, 3000));
-    // document.getElementById('loader').classList.remove('open');
-    // document.getElementById('loader').classList.add('close');
+    setTimeout(() => {
+      document.getElementById('loader').classList.remove('open');
+      document.getElementById('loader').classList.add('close');
+    }, 3000);
   }
   getImgData() {
     return new Promise((resolve) => {
