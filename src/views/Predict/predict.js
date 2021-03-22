@@ -147,9 +147,11 @@ class BarChart extends React.Component {
       ],
     ];
 
+    const titles = ['title 1', 'title 2', 'title 3'];
+
     for (let datas of data) {
       datas = this.pyramid(datas);
-      this.drawBarChart(datas);
+      this.drawBarChart(datas, titles);
     }
   }
   pyramid(arr) {
@@ -171,7 +173,7 @@ class BarChart extends React.Component {
 
     return newArr;
   }
-  drawBarChart(data) {
+  drawBarChart(data, titles) {
     const canvasHeight = 400;
     const canvasWidth = 600;
     const scale = 1;
@@ -229,6 +231,14 @@ class BarChart extends React.Component {
       .attr('width', x.bandwidth())
       .append('title')
       .text((d) => `${d.value} `);
+    svgCanvas
+      .append('text')
+      .attr('x', canvasWidth / 2)
+      .attr('y', 0 - margin.top / 2)
+      .attr('text-anchor', 'middle')
+      .style('font-size', '16px')
+      .style('text-decoration', 'underline')
+      .text('title');
 
     svgCanvas.append('g').call(xAxis);
 
