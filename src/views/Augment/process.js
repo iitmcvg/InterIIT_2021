@@ -64,7 +64,7 @@ export default function process() {
     this.setState({
         dir2: final,
         lmax: lmax,
-        lmin: lmin
+        lmin: lmin,
+        checked: []
     })
-    this.handleProceed()
 }

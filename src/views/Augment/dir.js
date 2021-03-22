@@ -7,6 +7,7 @@ import {
     TableHead,
     TableBody,
     TableRow,
+    Checkbox,
     TableCell,
     TextField,
     Card,
@@ -17,6 +18,7 @@ import {
     Typography,
     Button
 } from '@material-ui/core'
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import { withStyles } from '@material-ui/core/styles';
 
 import { socket } from '../../components/Socket'
@@ -38,12 +40,13 @@ export default class Dir extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            canProceed: false,
             filcol: '',
             filcon: '',
             filval: '',
             ordercol: '',
-            orderval: ''
+            orderval: '',
+            dir2: [],
+            checked: []
         }
         this.process = process.bind(this)
     }
@@ -70,12 +73,46 @@ export default class Dir extends React.Component {
     componentWillUnmount() {
         socket.off('dirlist')
     }
-    handleProceed = () => {
-        var newf = !this.state.canProceed
-        this.props.switch(newf)
-        this.setState({
-            canProceed: newf
-        })
+    handleCheck = (event) => {
+        var elem = event.target.getAttribute('aria-label')
+        if (elem === "allCheck") {
+            if (this.state.checked.length !== this.state.dir2.length) {
+                var final = []
+                for (var i = 0; i < this.state.dir2.length; i++)
+                    final.push(this.state.dir2[i]['dir'])
+                this.setState({
+                    checked: final
+                })
+            }
+            else
+                this.setState({
+                    checked: []
+                })
+        }
+        else {
+            var id = parseInt(elem.substring(5))
+            var oldc = Object.assign([], this.state.checked)
+
+            if (this.state.checked.includes(id)) {
+                var loc = oldc.indexOf(id)
+
+                var swap = oldc[oldc.length - 1]
+                oldc[loc] = swap
+                oldc[oldc.length - 1] = id
+
+                oldc.pop()
+
+                this.setState({
+                    checked: oldc
+                })
+            }
+            else {
+                oldc.push(id)
+                this.setState({
+                    checked: oldc
+                })
+            }
+        }
     }
     handleControls = (event) => {
         var type = event.target.getAttribute('name')
@@ -114,32 +151,14 @@ export default class Dir extends React.Component {
     render() {
         return (
             <Grid container style={{ marginTop: '10px' }} spacing={0} justify="center">
-                <Grid item xs={5} style={{ padding: '10px' }}>
-                    <TableContainer component={Paper} style={{ maxHeight: '80vh' }}>
-                        <Table stickyHeader>
-                            <TableHead>
-                                <TableRow>
-                                    <StyledTableCell>Dir</StyledTableCell>
-                                    <StyledTableCell>Item</StyledTableCell>
-                                    <StyledTableCell>Count</StyledTableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {this.state && this.state.dir2 && this.state.dir2.map((row, index) => (
-                                    <TableRow key={index}>
-                                        <StyledTableCell component="th">{row.dir}</StyledTableCell>
-                                        <StyledTableCell> {row.name} </StyledTableCell>
-                                        <StyledTableCell>{row.num}</StyledTableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Grid>
                 <Grid item xs={3} style={{ maxHeight: '80vh', overflowY: 'auto' }}>
                     <Card style={{ padding: '30px', marginTop: '10px' }}>
                         <Typography>
                             Filter
+                            {
+                                this.state.filcol !== '' &&
+                                <DeleteOutlinedIcon onClick={() => { this.setState({ filcol: '', filcon: '', filval: '' }) }} style={{ cursor: 'pointer' }} />
+                            }
                         </Typography>
                         <FormControl component="fieldset" style={{ justifyContent: 'center' }}>
                             <RadioGroup row aria-label="filcol" name="filcol" value={this.state.filcol} onChange={this.handleControls}>
@@ -184,20 +203,13 @@ export default class Dir extends React.Component {
                                     onChange={this.handleControls}
                                 />
                             }
-                            {
-                                this.state.filcol !== '' &&
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    style={{ marginTop: '10px' }}
-                                    onClick={() => { this.setState({ filcol: '', filcon: '', filval: '' }) }}
-                                >Reset Filter</Button>
-                            }
                         </FormControl>
-                    </Card>
-                    <Card style={{ padding: '30px' }}>
-                        <Typography>
+                        <Typography style={{ marginTop: '30px' }}>
                             Sort
+                            {
+                                this.state.ordercol !== '' &&
+                                <DeleteOutlinedIcon onClick={() => { this.setState({ ordercol: '', orderval: '' }) }} style={{ cursor: 'pointer' }} />
+                            }
                         </Typography>
                         <FormControl component="fieldset">
                             <RadioGroup row aria-label="ordercol" name="ordercol" value={this.state.ordercol} onChange={this.handleControls}>
@@ -213,16 +225,57 @@ export default class Dir extends React.Component {
                                 </RadioGroup>
 
                             }
-                            {
-                                this.state.ordercol !== '' &&
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => { this.setState({ ordercol: '', orderval: '' }) }}
-                                >Reset Sort</Button>
-                            }
                         </FormControl>
                     </Card>
+                    <div style={{ display: 'flex', marginTop: '20px', justifyContent: 'center' }}>
+                        <Button
+                            variant="outlined"
+                            onClick={this.handleClick}
+                            disabled={this.state.orderval === '' && this.state.filval === ''}
+                        > Apply </Button>
+                        <Button
+                            variant="outlined"
+                            style={{ marginLeft: '20px' }}
+                            onClick={() => { this.setState({ dir2: this.state.dir }) }}
+                            disabled={this.state.dir === this.state.dir2}
+                        > Reset </Button>
+                    </div>
+                </Grid>
+                <Grid item xs={5} style={{ padding: '10px' }}>
+                    <TableContainer component={Paper} style={{ maxHeight: '80vh' }}>
+                        <Table stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell>
+                                        <Checkbox
+                                            checked={this.state.checked.length === this.state.dir2.length}
+                                            onChange={this.handleCheck}
+                                            inputProps={{ 'aria-label': 'allCheck' }}
+                                        />
+                                    </StyledTableCell>
+                                    <StyledTableCell>Dir</StyledTableCell>
+                                    <StyledTableCell>Item</StyledTableCell>
+                                    <StyledTableCell>Count</StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {this.state && this.state.dir2 && this.state.dir2.map((row, index) => (
+                                    <TableRow key={index}>
+                                        <StyledTableCell>
+                                            <Checkbox
+                                                checked={this.state.checked.includes(row.dir)}
+                                                onChange={this.handleCheck}
+                                                inputProps={{ 'aria-label': `check${row.dir}` }}
+                                            />
+                                        </StyledTableCell>
+                                        <StyledTableCell component="th">{row.dir}</StyledTableCell>
+                                        <StyledTableCell> {row.name} </StyledTableCell>
+                                        <StyledTableCell>{row.num}</StyledTableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </Grid>
                 <Grid item xs={4} style={{ maxHeight: '80vh', overflowY: 'auto', padding: '10px' }}>
                     <Card style={{ padding: '30px' }}>
@@ -240,6 +293,7 @@ export default class Dir extends React.Component {
                         {
                             this.state.lmax && this.state.lmin && (this.state.dir !== this.state.dir2) &&
                             <div>
+                                <br />
                                 <Typography>
                                     Local Maximum : {this.state.lmax['name']} ({this.state.lmax['num']})
                                 </Typography>
@@ -248,22 +302,28 @@ export default class Dir extends React.Component {
                                 </Typography>
                             </div>
                         }
+                        <br />
+                        {
+                            this.state.checked.length === 0 &&
+                            <Typography>
+                                Please select a directory to resume
+                            </Typography>
+                        }
+                        {
+                            this.state.checked.length > 0 &&
+                            <div>
+                                <Typography>
+                                    You have selected {this.state.checked.length === 1 ? "a directory" : `${this.state.checked.length} directories`}.
+                                </Typography>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    style={{ marginLeft: '20px' }}
+                                    onClick={() => { this.props.switch(1) }}
+                                > Confirm </Button>
+                            </div>
+                        }
                     </Card>
-                    <div style={{ display: 'flex', marginTop: '20px', justifyContent: 'center' }}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={this.handleClick}
-                            disabled={this.state.orderval === '' && this.state.filval === ''}
-                        > Filter/Sort </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            style={{ marginLeft: '20px' }}
-                            onClick={() => { this.setState({ dir2: this.state.dir }) }}
-                            disabled={this.state.dir === this.state.dir2}
-                        > Reset to Original</Button>
-                    </div>
                 </Grid>
             </Grid >
         )
