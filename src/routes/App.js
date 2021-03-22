@@ -4,7 +4,6 @@ import { createBrowserHistory } from 'history';
 
 import NavBar from '../components/NavBar';
 
-import Login from '../views/Login/Login';
 import Augment from '../views/Augment/augment'
 import Predict from '../views/Predict/predict';
 
@@ -14,7 +13,6 @@ var routes = [
   { path: '/', component: Augment },
   { path: '/augment', component: Augment },
   { path: '/validate', component: Predict },
-  { path: '/auth', component: Login },
 ];
 
 export default class App extends React.Component {

@@ -17,7 +17,6 @@ const NavBar = (props) => {
     return [
       { path: '/augment', name: 'AUGMENT' },
       { path: '/validate', name: 'VALIDATE' },
-      { path: '/auth', name: 'TOKEN' },
     ];
   };
   return (
