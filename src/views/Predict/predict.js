@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as d3 from 'd3';
 
 import { Typography } from '@material-ui/core';
@@ -108,7 +108,7 @@ class BarChart extends React.Component {
   componentDidMount() {
     const data = [
       [
-        { name: 'E', value: 0.12702 },
+        { name: 'E', value: 0.12702, title: 'Graph 1' },
         { name: 'T', value: 0.09056 },
         { name: 'A', value: 0.08167 },
         { name: 'O', value: 0.07507 },
@@ -130,7 +130,7 @@ class BarChart extends React.Component {
         { name: 'B', value: 0.01492 },
       ],
       [
-        { name: 'Left', value: 0.92 },
+        { name: 'Left', value: 0.92, title: 'Graph 2' },
         { name: 'Right', value: 0.09056 },
         { name: 'Signal', value: 0.08167 },
         { name: 'Parking', value: 0.07507 },
@@ -138,7 +138,7 @@ class BarChart extends React.Component {
         { name: 'Speed', value: 0.06749 },
       ],
       [
-        { name: 'Left', value: 0.1 },
+        { name: 'Left', value: 0.1, title: 'Graph 3' },
         { name: 'Right', value: 0.09056 },
         { name: 'Signal', value: 0.08167 },
         { name: 'Parking', value: 0.07507 },
@@ -147,11 +147,9 @@ class BarChart extends React.Component {
       ],
     ];
 
-    const titles = ['title 1', 'title 2', 'title 3'];
-
     for (let datas of data) {
       datas = this.pyramid(datas);
-      this.drawBarChart(datas, titles);
+      this.drawBarChart(datas);
     }
   }
   pyramid(arr) {
@@ -173,7 +171,7 @@ class BarChart extends React.Component {
 
     return newArr;
   }
-  drawBarChart(data, titles) {
+  drawBarChart(data, title) {
     const canvasHeight = 400;
     const canvasWidth = 600;
     const scale = 1;
@@ -238,7 +236,7 @@ class BarChart extends React.Component {
       .attr('text-anchor', 'middle')
       .style('font-size', '16px')
       .style('text-decoration', 'underline')
-      .text('title');
+      .text(data[0].title);
 
     svgCanvas.append('g').call(xAxis);
 
