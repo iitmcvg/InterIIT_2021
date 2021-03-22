@@ -17,34 +17,43 @@ export default class Augment extends React.Component {
         this.state = {
             images: [],
             active: localStorage.getItem('page') ? parseInt(localStorage.getItem('page')) : 0,
+            dir: localStorage.getItem('dir')? JSON.parse(localStorage.getItem('dir')):[]
         }
     }
 
     handleActive = (value) => {
+        var newa = this.state.active + value
         this.setState({
-            active: this.state.active + value
+            active: newa
+        })
+
+        localStorage.setItem('page', newa)
+    }
+    setDir = (value) => {
+        this.setState({
+            dir: value
         })
     }
 
     render() {
         return (
             <div>
-                <StepperControl active={this.state.active} />
+                <StepperControl active={this.state.active} key={this.state.active}/>
                 {
                     this.state.active === 0 &&
-                    <Dir switch={this.handleActive} />
+                    <Dir switch={this.handleActive} setdir={this.setDir} />
                 }
                 { this.state.active === 1 &&
                     <Grid style={{ marginTop: '10px' }} container>
-                        <Button
-                            variant="outlined"
-                            style={{ marginLeft: '20px' }}
-                            onClick={() => { this.handleActive(-1) }}
-                        > Back </Button>
-                        <Grid item xs={4} style={{ height: '500px', overflowY: 'scroll' }}>
+                        <Grid item xs={6} style={{ height: '80vh', overflowY:'auto' }}>
+                            <Button
+                                variant="outlined"
+                                style={{ marginLeft: '20px' }}
+                                onClick={() => { this.handleActive(-1) }}
+                            > Back </Button>
                             <Controls />
                         </Grid>
-                        <Grid item xs={8} style={{ height: '500px', overflowY: 'scroll' }}>
+                        <Grid item xs={6} style={{ height: '80vh', overflowY: 'auto' }}>
                             <ImageGrid />
                         </Grid>
                     </Grid>

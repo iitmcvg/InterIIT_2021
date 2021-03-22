@@ -45,9 +45,11 @@ export default class Dir extends React.Component {
             ordercol: '',
             orderval: '',
             dir2: [],
-            checked: []
+            checked: localStorage.getItem('dir') ? JSON.parse(localStorage.getItem('dir')) : []
         }
         this.process = process.bind(this)
+
+        localStorage.setItem('page', 0)
     }
     getDirData = (data) => {
         const dum = Object.assign([], data)
@@ -146,6 +148,11 @@ export default class Dir extends React.Component {
         if (flag1 && flag2)
             this.process()
     }
+    handleConfirm = () => {
+        localStorage.setItem('dir', JSON.stringify(this.state.checked))
+        this.props.switch(1)
+        this.props.setdir(this.state.checked)
+    }
 
     render() {
         return (
@@ -156,7 +163,7 @@ export default class Dir extends React.Component {
                             Filter
                             {
                                 this.state.filcol !== '' &&
-                                <DeleteOutlinedIcon onClick={() => { this.setState({ filcol: '', filcon: '', filval: '' }) }} style={{ cursor: 'pointer' }} />
+                                <DeleteOutlinedIcon onClick={() => { this.setState({ filcol: '', filcon: '', filval: '' }) }} style={{ cursor: 'pointer', marginLeft: '200px' }} />
                             }
                         </Typography>
                         <FormControl component="fieldset" style={{ justifyContent: 'center' }}>
@@ -207,7 +214,7 @@ export default class Dir extends React.Component {
                             Sort
                             {
                                 this.state.ordercol !== '' &&
-                                <DeleteOutlinedIcon onClick={() => { this.setState({ ordercol: '', orderval: '' }) }} style={{ cursor: 'pointer' }} />
+                                <DeleteOutlinedIcon onClick={() => { this.setState({ ordercol: '', orderval: '' }) }} style={{ cursor: 'pointer', marginLeft: '200px' }} />
                             }
                         </Typography>
                         <FormControl component="fieldset">
@@ -314,12 +321,14 @@ export default class Dir extends React.Component {
                                 <Typography>
                                     You have selected {this.state.checked.length === 1 ? "a directory" : `${this.state.checked.length} directories`}.
                                 </Typography>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    style={{ marginLeft: '20px' }}
-                                    onClick={() => { this.props.switch(1) }}
-                                > Confirm </Button>
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        style={{ marginLeft: '20px' }}
+                                        onClick={this.handleConfirm}
+                                    > Confirm </Button>
+                                </div>
                             </div>
                         }
                     </Card>

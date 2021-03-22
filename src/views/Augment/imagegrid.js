@@ -36,7 +36,7 @@ export default class ImageGrid extends React.Component {
     }
     render() {
         return (
-            <Grid container spacing={0} style={{ padding: '20px' }}>
+            <Grid container spacing={0} style={{ padding: '10px' }}>
                 {
                     this.state.images && this.state.images.map((item, index) => {
                         return (

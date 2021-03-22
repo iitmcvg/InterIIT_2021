@@ -1,8 +1,9 @@
 import React from 'react'
 import {
-    Slider,
+    Grid,
     Card,
-    Typography
+    Typography,
+    Slider
 } from '@material-ui/core'
 
 import { list } from './controls_list'
@@ -26,18 +27,13 @@ export default class Controls extends React.Component {
         }
 
         return (
-            <div>
-                <div
-                    style={{
-                        padding: '10%',
-                        paddingLeft: '20%',
-                        paddingRight: '20%'
-                    }}>
-                    {
-                        list.map((cat, i) => {
-                            return (
+            <Grid container style={{ padding: '10px' }}>
+                {
+                    list.map((cat, i) => {
+                        return (
+                            <Grid item xs={6} >
                                 <Card key={i} style={{ padding: '10%' }} variant="outlined">
-                                    <Typography style={{ fontFamily: 'Proxima Reg, sans-serif', fontSize: '30px', color:'#E00420' }}>
+                                    <Typography style={{ fontFamily: 'Proxima Reg, sans-serif', fontSize: '30px', color: '#E00420' }}>
                                         {cat['categ']}
                                     </Typography>
                                     <br />
@@ -65,11 +61,11 @@ export default class Controls extends React.Component {
                                         })
                                     }
                                 </Card>
-                            )
-                        })
-                    }
-                </div>
-            </div >
+                            </Grid>
+                        )
+                    })
+                }
+            </Grid>
         )
     }
 }
