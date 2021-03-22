@@ -1,8 +1,8 @@
 import albumentations as A
 import cv2
 import glob
-import  numpy as np
-import  random
+import numpy as np
+import random
 import os
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
@@ -27,6 +27,8 @@ class augmentation:
         self.motion_blur = dict_transform['motion_blur']
         self.rain = dict_transform['rain']
         self.fog = dict_transform['fog']
+        self.coarse_dropout=dict_transform["generate_occlusion"]
+        self.shadow=dict_transform["shadows"]
         self.target = num_target_imgs
         self.transform_vals = transform_vals
 
@@ -48,7 +50,7 @@ class augmentation:
     def setup_pipeline(self):
 
         tranform_list = []
-
+        if self.shadow: tranform_list.append(A.RandomShadow(shadow_roi=(0, 0.5, 1, 1),num_shadows_upper=1,p=0.2))
         if self.scale : tranform_list.append(A.RandomScale(scale_limit=self.transform_vals['scale_factor'] ))
         if self.rotate : tranform_list.append(A.Rotate(limit=self.transform_vals[ "rot_angle"],p=0.8))
         if self.shift : tranform_list.append( A.ShiftScaleRotate(shift_limit=self.transform_vals['shift_factor'] , scale_limit=0.0, rotate_limit= 0, interpolation= 1, border_mode=4, p=0.8))
@@ -57,7 +59,7 @@ class augmentation:
         if self.motion_blur : tranform_list.append(A.MotionBlur(p=0.5, blur_limit=7))
         if self.fog : tranform_list.append(A.RandomFog(fog_coef_lower=0.0, fog_coef_upper=self.transform_vals['fog_factor'], alpha_coef=0.05, p=0.7))
         if self.rain :tranform_list.append(A.RandomRain(brightness_coefficient=0.95, drop_width= 1, blur_value= self.transform_vals["rain_factor"], p=0.7))
-
+        if self.coarse_dropout :tranform_list.append(A.CoarseDropout(max_holes=5, max_height=8, max_width=8,p=0.5))
         self.transform = A.Compose(tranform_list)
 
     def augment(self,save):
@@ -70,7 +72,7 @@ class augmentation:
             os.mkdir(self.path_save)
 
         for img in list(islice(cycle(self.imgs),0,self.target)):
-            img = cv2.resize(img, (48, 48))
+            img = cv2.resize(img, (224, 224))
             transformed_img = self.transform(image = img)['image']
             transformed_imgs.append(transformed_img)
             if save :                                                                  ### saving image to directory
