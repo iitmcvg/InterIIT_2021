@@ -89,7 +89,7 @@ def handle_input():
     with open('signnames.csv') as file:
         reader = csv.DictReader(file, delimiter=',')
         for index, row in enumerate(reader):
-            classnames.append({'name':row['SignName'], 'num':len(os.listdir(dsdir+sublist[index]))})
+            classnames.append({'dir':index,'name':row['SignName'], 'num':len(os.listdir(dsdir+sublist[index]))})
     return emit('dirlist', classnames)        
 
 @socketio.on('auglist')
