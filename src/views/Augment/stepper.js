@@ -38,6 +38,7 @@ export default class StepperControl extends React.Component {
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Button
                     variant="contained"
+                    color="primary"
                     onClick={handleBack}
                     disabled={this.state.active <= 0}
                 >
