@@ -23,7 +23,6 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { socket } from '../../components/Socket'
 import process from './process';
-import { max } from 'd3-array';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {

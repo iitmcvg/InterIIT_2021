@@ -2,8 +2,7 @@ import React from 'react';
 import {
     Stepper,
     Step,
-    StepLabel,
-    Button
+    StepLabel
 } from '@material-ui/core'
 
 export default class StepperControl extends React.Component {
