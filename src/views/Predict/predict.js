@@ -7,24 +7,14 @@ import UploadImages from './upload';
 import './upload.css';
 
 class PieBarChart extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: props.pieData,
+    };
+  }
   componentDidMount() {
-    const data = [
-      { name: 'speed (80)', value: '1500' },
-      { name: 'speed (70)', value: '1200' },
-      { name: 'speed (60)', value: '900' },
-      { name: 'speed (50)', value: '800' },
-      { name: 'speed (90)', value: '300' },
-      { name: 'U Turn', value: '495' },
-      { name: 'No Parking', value: '150' },
-      { name: 'Signal1', value: '795' },
-      { name: 'Signal 2', value: '540' },
-      { name: 'Police', value: '122' },
-      { name: 'Signal 3', value: '1100' },
-      { name: 'Left', value: '340' },
-      { name: 'Right', value: '640' },
-      { name: 'Side', value: '874' },
-    ];
-    this.drawPieChart(data);
+    this.drawPieChart(this.state.data);
   }
   drawPieChart(data) {
     const width = 1500;
@@ -105,48 +95,16 @@ class PieBarChart extends React.Component {
   }
 }
 class BarChart extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: props.barData,
+    };
+  }
   componentDidMount() {
-    const data = [
-      [
-        { name: 'E', value: 0.12702, title: 'Graph 1' },
-        { name: 'T', value: 0.09056 },
-        { name: 'A', value: 0.08167 },
-        { name: 'O', value: 0.07507 },
-        { name: 'I', value: 0.06966 },
-        { name: 'N', value: 0.06749 },
-        { name: 'S', value: 0.06327 },
-        { name: 'H', value: 0.06094 },
-        { name: 'R', value: 0.05987 },
-        { name: 'D', value: 0.04253 },
-        { name: 'L', value: 0.04025 },
-        { name: 'C', value: 0.02782 },
-        { name: 'U', value: 0.02758 },
-        { name: 'M', value: 0.02406 },
-        { name: 'W', value: 0.0236 },
-        { name: 'F', value: 0.02288 },
-        { name: 'G', value: 0.02015 },
-        { name: 'Y', value: 0.01974 },
-        { name: 'P', value: 0.01929 },
-        { name: 'B', value: 0.01492 },
-      ],
-      [
-        { name: 'Left', value: 0.92, title: 'Graph 2' },
-        { name: 'Right', value: 0.09056 },
-        { name: 'Signal', value: 0.08167 },
-        { name: 'Parking', value: 0.07507 },
-        { name: 'U Turn', value: 0.06966 },
-        { name: 'Speed', value: 0.06749 },
-      ],
-      [
-        { name: 'Left', value: 0.1, title: 'Graph 3' },
-        { name: 'Right', value: 0.09056 },
-        { name: 'Signal', value: 0.08167 },
-        { name: 'Parking', value: 0.07507 },
-        { name: 'U Turn', value: 0.96966 },
-        { name: 'Speed', value: 0.06749 },
-      ],
-    ];
+    const data = this.state.data;
 
+    console.log(data.length);
     for (let datas of data) {
       datas = this.pyramid(datas);
       this.drawBarChart(datas);
@@ -230,6 +188,16 @@ class BarChart extends React.Component {
       .append('title')
       .text((d) => `${d.value} `);
     svgCanvas
+      .append('g')
+      .selectAll('text')
+      .data(data)
+      .join('text')
+      .attr('x', (d, i) => x(i) + x.bandwidth() / 2)
+      .attr('y', (d) => y(d.value))
+      .attr('text-anchor', 'middle')
+      .style('font-size', '10px')
+      .text((d) => `${d.value} `);
+    svgCanvas
       .append('text')
       .attr('x', canvasWidth / 2)
       .attr('y', 0 - margin.top / 2)
@@ -251,7 +219,78 @@ class BarChart extends React.Component {
     );
   }
 }
-
+const pieData = [
+  { name: 'speed (80)', value: '1500' },
+  { name: 'speed (70)', value: '1200' },
+  { name: 'speed (60)', value: '900' },
+  { name: 'speed (50)', value: '800' },
+  { name: 'speed (90)', value: '300' },
+  { name: 'U Turn', value: '495' },
+  { name: 'No Parking', value: '150' },
+  { name: 'Signal1', value: '795' },
+  { name: 'Signal 2', value: '540' },
+  { name: 'Police', value: '122' },
+  { name: 'Signal 3', value: '1100' },
+  { name: 'Left', value: '340' },
+  { name: 'Right', value: '640' },
+  { name: 'Side', value: '874' },
+];
+const barData = [
+  [
+    { name: 'E', value: 0.12702, title: 'Graph 1' },
+    { name: 'T', value: 0.09056 },
+    { name: 'A', value: 0.08167 },
+    { name: 'O', value: 0.07507 },
+    { name: 'I', value: 0.06966 },
+    { name: 'N', value: 0.06749 },
+    { name: 'S', value: 0.06327 },
+    { name: 'H', value: 0.06094 },
+    { name: 'R', value: 0.05987 },
+    { name: 'D', value: 0.04253 },
+    { name: 'L', value: 0.04025 },
+    { name: 'C', value: 0.02782 },
+    { name: 'U', value: 0.02758 },
+    { name: 'M', value: 0.02406 },
+    { name: 'W', value: 0.0236 },
+    { name: 'F', value: 0.02288 },
+    { name: 'G', value: 0.02015 },
+    { name: 'Y', value: 0.01974 },
+    { name: 'P', value: 0.01929 },
+    { name: 'B', value: 0.01492 },
+  ],
+  [
+    { name: 'Left', value: 0.92, title: 'Graph 2' },
+    { name: 'Right', value: 0.09056 },
+    { name: 'Signal', value: 0.08167 },
+    { name: 'Parking', value: 0.07507 },
+    { name: 'U Turn', value: 0.06966 },
+    { name: 'Speed', value: 0.06749 },
+  ],
+  [
+    { name: 'Left', value: 1, title: 'Graph 3' },
+    { name: 'Right', value: 0.09056 },
+    { name: 'Signal', value: 0.08167 },
+    { name: 'Parking', value: 0.07507 },
+    { name: 'U Turn', value: 0.96966 },
+    { name: 'Speed', value: 0.06749 },
+  ],
+  [
+    { name: 'Left', value: 0.04, title: 'Graph 4' },
+    { name: 'Right', value: 0.09056 },
+    { name: 'Signal', value: 0.08167 },
+    { name: 'Parking', value: 0.07507 },
+    { name: 'U Turn', value: 1 },
+    { name: 'Speed', value: 0.06749 },
+  ],
+  [
+    { name: 'Left', value: 0.06, title: 'Graph 5' },
+    { name: 'Right', value: 0.09056 },
+    { name: 'Signal', value: 0.1 },
+    { name: 'Parking', value: 0.07507 },
+    { name: 'U Turn', value: 0.96966 },
+    { name: 'Speed', value: 0.06749 },
+  ],
+];
 const Results = () => {
   return (
     <div>
@@ -269,9 +308,10 @@ const Results = () => {
       <div class='bottom'>
         <div class='centered'>
           <h1>Results</h1>
-          <PieBarChart />
+          {barData.length > 4 && <PieBarChart pieData={pieData} />}
+
           <div class='grid-layout'>
-            <BarChart />
+            <BarChart barData={barData} />
           </div>
         </div>
       </div>
