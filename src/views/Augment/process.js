@@ -1,8 +1,6 @@
 export default function process() {
     var final = []
-    var ref = this.state.dir
-
-    alert('Executing')
+    var ref = Object.assign([], this.state.dir)
 
     if (this.state.filcol != '') {
         if (this.state.filcol === "item") {
@@ -43,9 +41,15 @@ export default function process() {
         }
     }
 
+    var dum = Object.assign([], final)
+    dum.sort(function (a, b) { return a['num'] - b['num'] })
+    var lmin = dum[0]
+    dum.reverse()
+    var lmax = dum[0]
+
     if (this.state.orderval !== '') {
         var col = this.state.ordercol
-        if(final.length === 0)
+        if (final.length === 0)
             final = ref
 
         if (col !== "item")
@@ -58,7 +62,9 @@ export default function process() {
     }
 
     this.setState({
-        dir2: final
+        dir2: final,
+        lmax: lmax,
+        lmin: lmin
     })
     this.handleProceed()
 }

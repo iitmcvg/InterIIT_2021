@@ -21,6 +21,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { socket } from '../../components/Socket'
 import process from './process';
+import { max } from 'd3-array';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -47,9 +48,19 @@ export default class Dir extends React.Component {
         this.process = process.bind(this)
     }
     getDirData = (data) => {
+        const dum = Object.assign([], data)
+        var order = dum.sort(function (a, b) { return a['num'] - b['num'] })
+        var gmin = order[0]
+        order.reverse()
+        var gmax = order[0]
+
         this.setState({
             dir: data,
-            dir2: data
+            dir2: data,
+            gmax: gmax,
+            gmin: gmin,
+            lmax: gmax,
+            lmin: gmin
         })
     }
     componentDidMount() {
@@ -79,16 +90,18 @@ export default class Dir extends React.Component {
             })
     }
     handleClick = () => {
-        var flag1 = false;
+        var flag1 = true;
         var flag2 = true;
 
         if (this.state.filcol !== '') {
-            if (this.state.filcon !== '' && this.state.filval === '')
+            if (this.state.filcon !== '' && this.state.filval === '') {
                 alert('Fill the limiting value')
-            else if (this.state.filcon === '')
+                flag1 = false
+            }
+            else if (this.state.filcon === '') {
                 alert('Select the condition')
-            else
-                flag1 = true;
+                flag1 = false
+            }
         }
         if (this.state.ordercol !== '' && this.state.orderval === '') {
             alert('Select the sorting order')
@@ -100,13 +113,13 @@ export default class Dir extends React.Component {
 
     render() {
         return (
-            <Grid container style={{ marginTop: '10px' }} justify="center">
-                <Grid item xs={7}>
+            <Grid container style={{ marginTop: '10px' }} spacing={0} justify="center">
+                <Grid item xs={5} style={{ padding: '10px' }}>
                     <TableContainer component={Paper} style={{ maxHeight: '80vh' }}>
                         <Table stickyHeader>
                             <TableHead>
                                 <TableRow>
-                                    <StyledTableCell>Directory name</StyledTableCell>
+                                    <StyledTableCell>Dir</StyledTableCell>
                                     <StyledTableCell>Item</StyledTableCell>
                                     <StyledTableCell>Count</StyledTableCell>
                                 </TableRow>
@@ -123,12 +136,12 @@ export default class Dir extends React.Component {
                         </Table>
                     </TableContainer>
                 </Grid>
-                <Grid item xs={3} style={{ marginLeft: '40px' }}>
-                    <Card style={{ padding: '30px' }}>
+                <Grid item xs={3} style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+                    <Card style={{ padding: '30px', marginTop: '10px' }}>
                         <Typography>
                             Filter
                         </Typography>
-                        <FormControl component="fieldset">
+                        <FormControl component="fieldset" style={{ justifyContent: 'center' }}>
                             <RadioGroup row aria-label="filcol" name="filcol" value={this.state.filcol} onChange={this.handleControls}>
                                 <FormControlLabel value="dir" control={<Radio />} label="Dir" />
                                 <FormControlLabel value="item" control={<Radio />} label="Item" />
@@ -176,12 +189,12 @@ export default class Dir extends React.Component {
                                 <Button
                                     variant="contained"
                                     color="primary"
+                                    style={{ marginTop: '10px' }}
                                     onClick={() => { this.setState({ filcol: '', filcon: '', filval: '' }) }}
-                                >Reset</Button>
+                                >Reset Filter</Button>
                             }
                         </FormControl>
                     </Card>
-                    <br />
                     <Card style={{ padding: '30px' }}>
                         <Typography>
                             Sort
@@ -206,27 +219,50 @@ export default class Dir extends React.Component {
                                     variant="contained"
                                     color="primary"
                                     onClick={() => { this.setState({ ordercol: '', orderval: '' }) }}
-                                >Reset</Button>
+                                >Reset Sort</Button>
                             }
                         </FormControl>
                     </Card>
-                    <br />
-                    <div style={{ display: 'flex' }}>
+                </Grid>
+                <Grid item xs={4} style={{ maxHeight: '80vh', overflowY: 'auto', padding: '10px' }}>
+                    <Card style={{ padding: '30px' }}>
+                        {
+                            this.state.gmax && this.state.gmin &&
+                            <div>
+                                <Typography>
+                                    Global Maximum : {this.state.gmax['name']} ({this.state.gmax['num']})
+                                </Typography>
+                                <Typography>
+                                    Global Minimum : {this.state.gmin['name']} ({this.state.gmin['num']})
+                                </Typography>
+                            </div>
+                        }
+                        {
+                            this.state.lmax && this.state.lmin && (this.state.dir !== this.state.dir2) &&
+                            <div>
+                                <Typography>
+                                    Local Maximum : {this.state.lmax['name']} ({this.state.lmax['num']})
+                                </Typography>
+                                <Typography>
+                                    Local Minimum : {this.state.lmin['name']} ({this.state.lmin['num']})
+                                </Typography>
+                            </div>
+                        }
+                    </Card>
+                    <div style={{ display: 'flex', marginTop: '20px', justifyContent: 'center' }}>
                         <Button
                             variant="contained"
                             color="primary"
                             onClick={this.handleClick}
                             disabled={this.state.orderval === '' && this.state.filval === ''}
-                        > Process </Button>
-                        {
-                            this.state.dir !== this.state.dir2 &&
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                style={{ marginLeft: '30px' }}
-                                onClick={() => { this.setState({ dir2: this.state.dir }) }}
-                            > Reset to Original</Button>
-                        }
+                        > Filter/Sort </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ marginLeft: '20px' }}
+                            onClick={() => { this.setState({ dir2: this.state.dir }) }}
+                            disabled={this.state.dir === this.state.dir2}
+                        > Reset to Original</Button>
                     </div>
                 </Grid>
             </Grid >
