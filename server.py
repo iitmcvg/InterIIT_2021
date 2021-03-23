@@ -1,12 +1,6 @@
 import os
-import torch
-import jwt
-import datetime
-import secrets
-import string
 import warnings
 import argparse
-import logging
 import yaml
 import csv
 
@@ -32,10 +26,6 @@ with open(config_file) as f:
 app = Flask(__name__, static_folder="./build", static_url_path="/")
 socketio = SocketIO(app, cors_allowed_origins='*', logger=True)
 
-jwt_secret = config['jwt_secret']
-N          = config['index_seed']
-alg        = 'HS256'
-
 imgdir = './dataset/images/'
 dsdir = './data/'
 
@@ -44,34 +34,6 @@ dsdir = './data/'
 # model.eval()
 
 # print('Model loaded')
-
-@app.route('/token', methods=['POST'])
-def token():
-    name     = request.form['username']
-    password = request.form['password']
-
-    if credential:
-        # if str(credential[1]) == password:
-        if password == "IITM":
-            try:
-                payload = {
-                    'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=0),
-                    'iat': datetime.datetime.utcnow(),
-                    'sub': name         
-                }
-                enc = jwt.encode(
-                    payload,
-                    jwt_secret,
-                    algorithm=alg
-                )
-                return enc
-            except:
-                return '500 : JWT couldnt be generated'
-        else:
-            return '405 : Password Mismatch'
-    else:
-        return '404 : User not found'
-
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path>')
@@ -94,7 +56,6 @@ def handle_input():
 
 @socketio.on('auglist')
 def handle_input():
-
     for i in os.listdir(imgdir):
         r = open(imgdir+i, 'rb')
         data = r.read()
