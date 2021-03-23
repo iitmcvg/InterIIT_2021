@@ -17,7 +17,7 @@ export default class Augment extends React.Component {
         this.state = {
             images: [],
             active: localStorage.getItem('page') ? parseInt(localStorage.getItem('page')) : 0,
-            dir: localStorage.getItem('dir')? JSON.parse(localStorage.getItem('dir')):[]
+            dir: localStorage.getItem('dir') ? JSON.parse(localStorage.getItem('dir')) : []
         }
     }
 
@@ -38,25 +38,25 @@ export default class Augment extends React.Component {
     render() {
         return (
             <div>
-                <StepperControl active={this.state.active} key={this.state.active}/>
+                <StepperControl active={this.state.active} key={this.state.active} />
                 {
                     this.state.active === 0 &&
                     <Dir switch={this.handleActive} setdir={this.setDir} />
                 }
-                { this.state.active === 1 &&
+                {
+                    this.state.active === 1 &&
                     <Grid style={{ marginTop: '10px' }} container>
-                        <Grid item xs={6} style={{ height: '80vh', overflowY:'auto' }}>
-                            <Button
-                                variant="outlined"
-                                style={{ marginLeft: '20px' }}
-                                onClick={() => { this.handleActive(-1) }}
-                            > Back </Button>
-                            <Controls />
+                        <Grid item xs={6} style={{ height: '80vh' }}>
+                            <Controls switch={this.handleActive} />
                         </Grid>
                         <Grid item xs={6} style={{ height: '80vh', overflowY: 'auto' }}>
                             <ImageGrid />
                         </Grid>
                     </Grid>
+                }
+                {
+                    this.state.active === 2 &&
+                    <Button onClick={()=>{this.handleActive(-1)}}>Back</Button>
                 }
             </div>
         )

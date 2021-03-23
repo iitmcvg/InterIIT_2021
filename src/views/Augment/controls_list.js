@@ -20,7 +20,7 @@ export const list = [
             }]
     },
     {
-        "categ": "Translational",
+        "categ": "Rotational",
         "list": [
             {
                 disp: "Scaling",
@@ -38,8 +38,9 @@ export const list = [
                 step: 1,
                 def: 0
             }]
-    }, {
-        "categ": "Translational",
+    }, 
+    {
+        "categ": "Affine",
         "list": [
             {
                 disp: "Scaling",
