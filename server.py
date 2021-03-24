@@ -6,6 +6,7 @@ import csv
 import random
 import string
 import shutil
+import json
 
 from flask           import Flask, request
 from flask_cors      import CORS
@@ -104,6 +105,12 @@ def handle_input(transform):
             emit('augpreview',{"c" : res, "img": data})
             r.close()
     return 1
+
+@socketio.on('augment')
+def handle_input(data):
+    dump = open("aug.json", "a")
+    json.dump(data, dump)
+    dump.close()
 
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = config['socket_secret']

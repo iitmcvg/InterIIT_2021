@@ -4,3 +4,4 @@ data-post
 data-augmented
 
 __pycache__
+*.json
