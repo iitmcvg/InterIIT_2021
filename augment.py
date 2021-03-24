@@ -12,7 +12,7 @@ from itertools import cycle,islice
 IMG_SHAPE = 48
 NUM_CLASSES = 43
 pr_dir_load = r'./data/'
-pr_dir_save = r'./data-preview/'
+pr_dir_save = r'./data-augmented/'
 
 
 class augmentation:
@@ -68,8 +68,11 @@ class augmentation:
         count = 0
 
         if save :
+            if not self.pr_dir_save in os.listdir(os.getcwd()):
+                os.mkdir(self.pr_dir_save)
             self.path_save = os.path.join(self.pr_dir_save, self.dir)
-            os.mkdir(self.path_save)
+            if not self.dir in os.listdir(self.pr_dir_save):
+                os.mkdir(self.path_save)
 
         for img in list(islice(cycle(self.imgs),0,self.target)):
             img = cv2.resize(img, (224, 224))
@@ -83,7 +86,7 @@ class augmentation:
         print('class saved ' + str(self.class_id))
 
         if save :
-            with open('archive\Train_augmented.csv', 'a', newline='') as file:       ### saving image name and path to a CSV file
+            with open(pr_dir_save+'archive\Train_augmented.csv', 'a', newline='') as file:       ### saving image name and path to a CSV file
                 writer = csv.writer(file)
                 writer.writerows(data)
 
@@ -110,14 +113,14 @@ def generate_augented_dataset():
          visualize(imgs=imgs,class_id=i)
 
 
-def augment_class(class_id):
+def augment_class(class_id, num):
     transform_list = {"shift": 1, 'scale': 1, 'rotate': 1, 'brightness': 1, 'contrast': 1,
                       'motion_blur': 1, 'rain': 1, 'fog': 1, 'generate_occlusion':1, 'shadows':1}
 
     transform_vals = {"shift_factor": 0.2, "scale_factor": 0.2, "rot_angle": 30, "brightness_factor": 0.3,
                       "contrast_factor": 0.2, "motion_blur_factor": 4, "fog_factor": 0.4, "rain_factor": 3, 'generate_occlusion':1}
 
-    aug = augmentation(class_id=class_id, dict_transform=transform_list, transform_vals=transform_vals, num_target_imgs=4)
+    aug = augmentation(class_id=class_id, dict_transform=transform_list, transform_vals=transform_vals, num_target_imgs=num)
     aug.load_data()
     aug.setup_pipeline()
     imgs = aug.augment(save=True)
