@@ -44,7 +44,12 @@ def handler(path):
 
 @socketio.on('predict')
 def handle_input(images):
-    return emit('predict','Hi')
+    pieValues = []
+    with open('validate.csv') as file:
+        reader = csv.DictReader(file, delimiter=',')
+        for index, row in enumerate(reader):
+            pieValues.append({'name':row['SignName'],'value':row['Value'],'title':row['Title']})
+    return emit('predict',pieValues)
 
 @socketio.on('dirlist')
 def handle_input():
