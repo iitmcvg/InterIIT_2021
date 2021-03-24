@@ -9,13 +9,10 @@ export default class BarChart extends React.Component {
     };
   }
   componentDidMount() {
-    const data = this.state.data;
-
-    console.log(data.length);
-    for (let datas of data) {
-      datas = this.pyramid(datas);
-      this.drawBarChart(datas);
-    }
+    const datas = this.state.data;
+    const title = datas.title;
+    console.log(datas.length);
+    this.drawBarChart(datas, title);
   }
   pyramid(arr) {
     var newArr = [];
