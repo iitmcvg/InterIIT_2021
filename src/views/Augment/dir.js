@@ -151,7 +151,7 @@ export default class Dir extends React.Component {
         socket.emit("augsetdir", this.state.checked)
         localStorage.setItem('dir', JSON.stringify(this.state.checked))
         this.props.switch(1)
-        this.props.setdir(this.state.checked)
+        this.props.setdir({ "dir": this.state.checked, "max": this.state.gmax })
     }
 
     render() {

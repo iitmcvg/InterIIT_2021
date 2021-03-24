@@ -46,7 +46,7 @@ export default class Controls extends React.Component {
                         <Button
                             variant="outlined"
                             style={{ marginLeft: '20px' }}
-                            onClick={() => { this.props.switch(1) }}
+                            onClick={() => { this.props.setops(this.state); this.props.switch(1) }}
                             disabled={this.state.length > 0}
                         > Confirm </Button>
                     }
