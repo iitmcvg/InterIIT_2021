@@ -4,8 +4,9 @@ import { createBrowserHistory } from 'history';
 
 import NavBar from '../components/NavBar';
 
-import Augment from '../views/Augment/augment'
+import Augment from '../views/Augment/augment';
 import Predict from '../views/Predict/predict';
+import Results from '../views/Results/results';
 
 var hist = createBrowserHistory();
 
@@ -13,6 +14,7 @@ var routes = [
   { path: '/', component: Augment },
   { path: '/augment', component: Augment },
   { path: '/validate', component: Predict },
+  { path: '/results', component: Results },
 ];
 
 export default class App extends React.Component {
@@ -20,7 +22,7 @@ export default class App extends React.Component {
     return (
       <div>
         <NavBar />
-        <div style={{marginTop:'10px'}}>
+        <div style={{ marginTop: '10px' }}>
           <Router history={hist}>
             <Switch>
               {routes.map((prop, key) => {

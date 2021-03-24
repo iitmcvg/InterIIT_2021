@@ -17,12 +17,13 @@ const NavBar = (props) => {
     return [
       { path: '/augment', name: 'AUGMENT' },
       { path: '/validate', name: 'VALIDATE' },
+      { path: '/results', name: 'RESULTS' },
     ];
   };
   return (
     <div
       style={{
-        fontFamily: 'Proxima Bold,sans-serif'
+        fontFamily: 'Proxima Bold,sans-serif',
       }}
     >
       <Navbar style={{ backgroundColor: 'inherit' }} light expand='md'>
