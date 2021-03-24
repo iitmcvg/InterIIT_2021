@@ -48,7 +48,6 @@ export default class Dir extends React.Component {
             checked: localStorage.getItem('dir') ? JSON.parse(localStorage.getItem('dir')) : []
         }
         this.process = process.bind(this)
-
         localStorage.setItem('page', 0)
     }
     getDirData = (data) => {
@@ -149,6 +148,7 @@ export default class Dir extends React.Component {
             this.process()
     }
     handleConfirm = () => {
+        socket.emit("augsetdir", this.state.checked)
         localStorage.setItem('dir', JSON.stringify(this.state.checked))
         this.props.switch(1)
         this.props.setdir(this.state.checked)

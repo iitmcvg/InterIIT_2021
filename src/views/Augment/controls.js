@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core'
 
 import { list } from './controls_list'
+import { socket } from '../../components/Socket'
 
 export default class Controls extends React.Component {
     constructor(props) {
@@ -18,11 +19,13 @@ export default class Controls extends React.Component {
         this.handleChange = this.handleChange.bind(this)
     }
     handleChange = (inp) => {
-        var id = inp.target.parentNode.id
-        var value = inp.target.getAttribute('aria-valuetext')
-        this.setState({
-            [id]: value
-        })
+        if (inp) {
+            var id = inp.target.parentNode.id
+            var value = inp.target.getAttribute('aria-valuetext')
+            this.setState({
+                [id]: value
+            })
+        }
     }
 
     render() {
@@ -64,7 +67,7 @@ export default class Controls extends React.Component {
                                                     return (
                                                         <div key={index}>
                                                             <Typography style={{ fontFamily: 'Proxima Reg, sans-serif' }}>
-                                                                {item.disp} : {this.state && this.state[`${cat['categ']}_${item.name}`]}{!this.state && item.def}{this.state && !this.state[`${cat['categ']}_${item.name}`] && item.def}
+                                                                {item.disp} : {this.state && this.state[item.name]}{!this.state && item.def}{this.state && !this.state[item.name] && item.def}
                                                             </Typography>
                                                             <Slider
                                                                 getAriaValueText={valuetext}
@@ -73,9 +76,9 @@ export default class Controls extends React.Component {
                                                                 defaultValue={item.def}
                                                                 min={item.min}
                                                                 max={item.max}
-                                                                id={`${cat['categ']}_${item.name}`}
+                                                                id={item.name}
                                                                 onChange={this.handleChange}
-                                                                onChangeCommitted={this.handleChange}
+                                                                onChangeCommitted={() => { socket.emit("augpreview", this.state); this.handleChange() }}
                                                                 valueLabelDisplay="auto"
                                                                 marks={[{ value: item.min, label: item.min }, { value: item.max, label: item.max }]}
                                                             />

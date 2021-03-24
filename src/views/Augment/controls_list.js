@@ -1,6 +1,6 @@
 export const list = [
     {
-        "categ": "Translational",
+        "categ": "Geometric",
         "list": [
             {
                 disp: "Scaling",
@@ -16,47 +16,71 @@ export const list = [
                 min: -359,
                 max: 359,
                 step: 1,
+                def: 0
+            },
+            {
+                disp: "Shifting",
+                name: "shift",
+                min: 0,
+                max: 1,
+                step: 0.01,
                 def: 0
             }]
     },
     {
-        "categ": "Rotational",
+        "categ": "Nature",
         "list": [
             {
-                disp: "Scaling",
-                name: "scale",
+                disp: "Shadow",
+                name: "shadow",
                 min: 0,
                 max: 1,
                 step: 0.01,
                 def: 0
             },
             {
-                disp: "Rotating",
-                name: "rotate",
-                min: -359,
-                max: 359,
-                step: 1,
+                disp: "Fog",
+                name: "fog",
+                min: 0,
+                max: 1,
+                step: 0.01,
+                def: 0
+            },
+            {
+                disp: "Rain",
+                name: "rain",
+                min: 0,
+                max: 1,
+                step: 0.01,
                 def: 0
             }]
-    }, 
+    },
     {
-        "categ": "Affine",
+        "categ": "Color",
         "list": [
             {
-                disp: "Scaling",
-                name: "scale",
+                disp: "Brightness",
+                name: "brightness",
                 min: 0,
                 max: 1,
                 step: 0.01,
                 def: 0
             },
             {
-                disp: "Rotating",
-                name: "rotate",
-                min: -359,
-                max: 359,
-                step: 1,
+                disp: "Contrast",
+                name: "contrast",
+                min: 0,
+                max: 1,
+                step: 0.01,
+                def: 0
+            },
+            {
+                disp: "Motion Blur",
+                name: "motion_blur",
+                min: 0,
+                max: 1,
+                step: 0.01,
                 def: 0
             }]
-    }
+    },
 ]

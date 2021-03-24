@@ -26,7 +26,6 @@ export default class Augment extends React.Component {
         this.setState({
             active: newa
         })
-
         localStorage.setItem('page', newa)
     }
     setDir = (value) => {

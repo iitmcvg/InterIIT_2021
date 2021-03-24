@@ -9,30 +9,28 @@ export default class ImageGrid extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            images: []
+            images: [],
+            c: 0
         }
     }
     getData = (data) => {
-        if (typeof (data) === 'string') {
-            alert(data)
-            window.location.href = '/auth'
-        }
-        else {
-            const blob = new Blob([data], { type: 'image/png' })
-            var newlist = this.state.images
-            newlist.push(blob)
-            this.setState({
-                images: newlist
-            })
-        }
+        const blob = new Blob([data['img']], { type: 'image/png' })
+        var newlist = []
+        if (this.state.c === data['c'])
+            newlist = this.state.images
+        newlist.push(blob)
+        this.setState({
+            images: newlist,
+            c: data['c']
+        })
     }
 
     componentDidMount() {
-        socket.on('auglist', this.getData)
-        socket.emit('auglist')
+        socket.on('augpreview', this.getData)
+        socket.emit('augpreview', {})
     }
     componentWillUnmount() {
-        socket.off('auglist')
+        socket.off('augpreview')
     }
     render() {
         return (
