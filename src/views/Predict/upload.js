@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import {
   Button,
   // Box,
@@ -8,7 +8,6 @@ import {
 } from '@material-ui/core';
 import { BoxLoading } from 'react-loadingg';
 import './upload.css';
-import { Typography } from '@material-ui/core';
 
 import BarChart from './barchart';
 import PieBarChart from './pieChart';
@@ -173,60 +172,62 @@ class UploadImages extends Component {
     const { currentFile, previewImage } = this.state;
 
     return (
-      <div>
-        <div className='top'>
-          <div className='container'>
+      <div className='overall'>
+        <div className='top grid-layout'>
+          <div className='tile-left'>
+            <div className='container'>
+              <h5>Upload Images to Test</h5>
+            </div>
+
             <div className='mg20'>
-              <Typography variant='h5'>Upload Images to Test</Typography>
+              <label htmlFor='btn-upload'>
+                <input
+                  id='btn-upload'
+                  name='btn-upload'
+                  style={{ display: 'none' }}
+                  type='file'
+                  accept='image/*'
+                  onChange={this.selectFile}
+                />
+                <Button
+                  className='btn-choose'
+                  variant='outlined'
+                  component='span'
+                >
+                  Choose Image
+                </Button>
+              </label>
+
+              <Button
+                className='btn-upload'
+                color='primary'
+                variant='contained'
+                component='span'
+                disabled={!currentFile}
+                onClick={this.upload}
+              >
+                Upload
+              </Button>
+              <div id='loader' className='close'>
+                <BoxLoading />
+              </div>
+
+              {previewImage && (
+                <div>
+                  <img className='preview my20' src={previewImage} alt='' />
+                </div>
+              )}
             </div>
           </div>
-
-          <div className='mg20'>
-            <label htmlFor='btn-upload'>
-              <input
-                id='btn-upload'
-                name='btn-upload'
-                style={{ display: 'none' }}
-                type='file'
-                accept='image/*'
-                onChange={this.selectFile}
-              />
-              <Button
-                className='btn-choose'
-                variant='outlined'
-                component='span'
-              >
-                Choose Image
-              </Button>
-            </label>
-            <div className='file-name'>
-              {currentFile ? currentFile.name : null}
-            </div>
-            <Button
-              className='btn-upload'
-              color='primary'
-              variant='contained'
-              component='span'
-              disabled={!currentFile}
-              onClick={this.upload}
-            >
-              Upload
-            </Button>
-            <div id='loader' className='close'>
-              <BoxLoading />
-            </div>
-
-            {previewImage && (
-              <div>
-                <img className='preview my20' src={previewImage} alt='' />
-              </div>
-            )}
+          <div className='tile-middle'>
+            <h1>Results</h1>
+          </div>
+          <div className='tile-right'>
+            <PieBarChart pieData={pieData} />
           </div>
         </div>
         <div className='bottom'>
           <div className='centered'>
-            <h1>Results</h1>
-            <PieBarChart pieData={pieData} />
             {this.state.graphOn && (
               <div className='grid-layout'>
                 <BarChart barData={barData} />

@@ -13,15 +13,13 @@ export default class PieBarChart extends React.Component {
   }
   drawPieChart(data) {
     const width = 1500;
-    const height = 500;
+    const height = 800;
     const radius = (Math.min(width, height) / 2) * 0.8;
     const arc = d3
       .arc()
       .innerRadius(0)
       .outerRadius(Math.min(width, height) / 2 - 1);
     const arcLabel = d3.arc().innerRadius(radius).outerRadius(radius);
-
-    const outerRadius = Math.min(width, height) / 2;
 
     const pie = d3
       .pie()
@@ -40,7 +38,9 @@ export default class PieBarChart extends React.Component {
     const svg = d3
       .select(this.refs.canvas)
       .append('svg')
-      .attr('viewBox', [-width / 2, -height / 2, width, height]);
+      .attr('viewBox', [-width / 2, -height / 2, width, height])
+      .style('position', 'relative')
+      .style('left', '10%');
 
     svg
       .append('g')
@@ -55,8 +55,8 @@ export default class PieBarChart extends React.Component {
 
     svg
       .append('g')
-      .attr('font-family', 'sans-serif')
-      .attr('font-size', 12)
+      .attr('font-family', 'Proxima Reg')
+      .attr('font-size', 20)
       .attr('text-anchor', 'middle')
       .selectAll('text')
       .data(arcs)

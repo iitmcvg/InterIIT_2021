@@ -102,7 +102,8 @@ export default class BarChart extends React.Component {
       .attr('x', (d, i) => x(i) + x.bandwidth() / 2)
       .attr('y', (d) => y(d.value))
       .attr('text-anchor', 'middle')
-      .style('font-size', '10px')
+      .style('font-size', '13px')
+      .style('font-family', 'Proxima Reg')
       .text((d) => `${d.value} `);
     svgCanvas
       .append('text')
@@ -110,6 +111,7 @@ export default class BarChart extends React.Component {
       .attr('y', 0 - margin.top / 2)
       .attr('text-anchor', 'middle')
       .style('font-size', '16px')
+      .style('font-family', 'Proxima Reg')
       .style('text-decoration', 'underline')
       .text(data[0].title);
 
