@@ -100,6 +100,8 @@ const barData = [
     { name: 'Speed', value: 0.06749 },
   ],
 ];
+// var barData = [];
+// var isGraph = false;
 class UploadImages extends Component {
   constructor(props) {
     super(props);
@@ -109,6 +111,7 @@ class UploadImages extends Component {
     this.state = {
       barData: [],
       pieData: [],
+      graphOn: false,
       currentFile: undefined,
       previewImage: undefined,
       progress: 0,
@@ -122,7 +125,10 @@ class UploadImages extends Component {
   componentDidMount() {
     socket.on('predict', (data) => {
       // this.setState({ barData: data });
+      // barData = data;
       console.log(data);
+      this.setState({ graphOn: true });
+      // isGraph = true;
     });
   }
 
@@ -167,63 +173,67 @@ class UploadImages extends Component {
     const { currentFile, previewImage } = this.state;
 
     return (
-      <div className='mg20'>
-        <label htmlFor='btn-upload'>
-          <input
-            id='btn-upload'
-            name='btn-upload'
-            style={{ display: 'none' }}
-            type='file'
-            accept='image/*'
-            onChange={this.selectFile}
-          />
-          <Button className='btn-choose' variant='outlined' component='span'>
-            Choose Image
-          </Button>
-        </label>
-        <div className='file-name'>{currentFile ? currentFile.name : null}</div>
-        <Button
-          className='btn-upload'
-          color='primary'
-          variant='contained'
-          component='span'
-          disabled={!currentFile}
-          onClick={this.upload}
-        >
-          Upload
-        </Button>
-        <div id='loader' class='close'>
-          <BoxLoading />
-        </div>
-
-        {/* {currentFile && (
-          <Box className='my20' display='flex' alignItems='center'>
-            <Box width='100%' mr={1}>
-              <BorderLinearProgress variant='determinate' value={progress} />
-            </Box>
-            <Box minWidth={35}>
-              <Typography
-                variant='body2'
-                color='textSecondary'
-              >{`${progress}%`}</Typography>
-            </Box>
-          </Box>
-        )} */}
-
-        {previewImage && (
-          <div>
-            <img className='preview my20' src={previewImage} alt='' />
+      <div>
+        <div className='top'>
+          <div className='container'>
+            <div className='mg20'>
+              <Typography variant='h5'>Upload Images to Test</Typography>
+            </div>
           </div>
-        )}
 
-        {/* {message && (
-          <Typography
-            variant='subtitle2'
-            className={`upload-message ${isError ? 'error' : ''}`}
-          >
-            {message}
-          </Typography>
-        )} */}
+          <div className='mg20'>
+            <label htmlFor='btn-upload'>
+              <input
+                id='btn-upload'
+                name='btn-upload'
+                style={{ display: 'none' }}
+                type='file'
+                accept='image/*'
+                onChange={this.selectFile}
+              />
+              <Button
+                className='btn-choose'
+                variant='outlined'
+                component='span'
+              >
+                Choose Image
+              </Button>
+            </label>
+            <div className='file-name'>
+              {currentFile ? currentFile.name : null}
+            </div>
+            <Button
+              className='btn-upload'
+              color='primary'
+              variant='contained'
+              component='span'
+              disabled={!currentFile}
+              onClick={this.upload}
+            >
+              Upload
+            </Button>
+            <div id='loader' className='close'>
+              <BoxLoading />
+            </div>
+
+            {previewImage && (
+              <div>
+                <img className='preview my20' src={previewImage} alt='' />
+              </div>
+            )}
+          </div>
+        </div>
+        <div className='bottom'>
+          <div className='centered'>
+            <h1>Results</h1>
+            <PieBarChart pieData={pieData} />
+            {this.state.graphOn && (
+              <div className='grid-layout'>
+                <BarChart barData={barData} />
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     );
   }
@@ -232,27 +242,7 @@ class UploadImages extends Component {
 const Evaluation = () => {
   return (
     <div>
-      <div class='top'>
-        {/* <div class='centered'> */}
-        <div className='container'>
-          <div className='mg20'>
-            <Typography variant='h5'>Upload Images to Test</Typography>
-          </div>
-          <UploadImages />
-        </div>
-        {/* </div> */}
-      </div>
-
-      <div class='bottom'>
-        <div class='centered'>
-          <h1>Results</h1>
-          <PieBarChart pieData={pieData} />
-
-          <div class='grid-layout'>
-            <BarChart barData={barData} />
-          </div>
-        </div>
-      </div>
+      <UploadImages />
     </div>
   );
 };
