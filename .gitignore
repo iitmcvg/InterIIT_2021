@@ -1,3 +1,6 @@
 data
-data-preview
+data-pre
+data-post
 data-augmented
+
+__pycache__
