@@ -11,6 +11,7 @@ import Dir from './dir'
 import Controls from './controls'
 import ImageGrid from './imagegrid'
 
+import { socket } from '../../components/Socket'
 
 export default class Augment extends React.Component {
 
@@ -18,9 +19,12 @@ export default class Augment extends React.Component {
         super(props)
         this.state = {
             images: [],
-            active: localStorage.getItem('page') ? parseInt(localStorage.getItem('page')) : 0,
+            active: localStorage.getItem('max') ? parseInt(localStorage.getItem('page')) : 0,
             dir: localStorage.getItem('dir') ? JSON.parse(localStorage.getItem('dir')) : [],
+            max: localStorage.getItem('max') ? parseInt(localStorage.getItem('max')) : 0,
         }
+        this.setDir = this.setDir.bind(this)
+        this.setOps = this.setOps.bind(this)
     }
 
     handleActive = (value) => {
@@ -32,14 +36,25 @@ export default class Augment extends React.Component {
     }
     setDir = (value) => {
         this.setState({
-            checked: value['dir'],
-            max: value['max']
+            dir: value['dir'],
+            max: value['max']['num']
         })
+        localStorage.setItem('max', value['max']['num'])
     }
     setOps = (value) => {
         this.setState({
             ops: value
         })
+    }
+    handleNum = (event) => {
+        this.setState({
+            finalnum: event.target.value
+        })
+    }
+    handleFinalClick = () => {
+        socket.emit('augment', { "dir": this.state.dir, "ops": this.state.ops, "num": this.state.finalnum })
+        alert('Config saved :)')
+        window.location.href = '/'
     }
 
     render() {
@@ -64,11 +79,11 @@ export default class Augment extends React.Component {
                 {
                     this.state.active === 2 &&
                     <div style={{ padding: '30px' }}>
-                        <Typography style={{ margin: "auto", textAlign: 'center' }}>
-                            You have selected {this.state.checked.length === 1 ? "a directory" : `${this.state.checked.length} directories`}.
+                        <Typography style={{ textAlign: 'center' }}>
+                            You have selected {this.state.dir.length === 1 ? "a directory" : `${this.state.dir.length} directories`}.
                         </Typography>
-                        <Typography style={{ margin: "auto", textAlign: 'center' }}>
-                            Maximum number of images in a directory : {this.state.max['num']}.
+                        <Typography style={{ textAlign: 'center' }}>
+                            Maximum number of images in a directory : {this.state.max}.
                         </Typography>
                         <br />
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -82,14 +97,23 @@ export default class Augment extends React.Component {
                                 label="Final num of images"
                                 name="filval"
                                 type="number"
+                                defaultValue={this.state.max}
                                 variant="outlined"
+                                onChange={this.handleNum}
                             />
                             <Button
                                 variant="contained"
                                 color="primary"
                                 style={{ marginLeft: '20px' }}
+                                onClick={this.handleFinalClick}
                             > Confirm </Button>
                         </div>
+                        {
+                            this.state.finalnum && this.state.finalnum > this.state.max &&
+                            <Typography style={{ textAlign: 'center' }}>
+                                {`It's preferable to keep final number <= global maximum`}
+                            </Typography>
+                        }
                     </div>
                 }
             </div>
