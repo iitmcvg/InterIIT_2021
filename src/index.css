@@ -36,6 +36,10 @@ code {
   opacity: 0.5;
 }
 
+.MuiCheckbox-colorSecondary.Mui-checked {
+  color: black !important;
+}
+
 .MuiStepConnector-line {
   border-color: black !important;
 }
