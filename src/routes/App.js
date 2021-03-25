@@ -5,7 +5,7 @@ import { createBrowserHistory } from 'history';
 import NavBar from '../components/NavBar';
 
 import Augment from '../views/Augment/augment';
-import Training from '../views/Training/training'
+import Training from '../views/Training/training';
 import Predict from '../views/Predict/predict';
 import Results from '../views/Results/results';
 
@@ -14,8 +14,8 @@ var hist = createBrowserHistory();
 var routes = [
   { path: '/', component: Augment },
   { path: '/augment', component: Augment },
-  { path: '/train', component: Training},
-  { path: '/validate', component: Predict },
+  { path: '/train', component: Training },
+  { path: '/inference', component: Predict },
   { path: '/results', component: Results },
 ];
 
