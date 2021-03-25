@@ -44,6 +44,9 @@ def save_train_curves(history, path):
 def cnn_model():
     model = Sequential()
 
+    IMG_SIZE = 224
+    NUM_CLASSES = 48
+    
     model.add(Conv2D(32, (3, 3), padding='same',
                      input_shape=( IMG_SIZE, IMG_SIZE ,3),
                      activation='relu'))
