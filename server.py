@@ -13,23 +13,13 @@ from flask           import Flask, request
 from flask_cors      import CORS
 from flask_socketio  import SocketIO, emit, disconnect
 
+from model_viz import visualize_main
 from augment import augmentation
 import model_eval as modelEval
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--prod",action='store_true',help="Production configs are applied")
-args = vars(parser.parse_args())
-
-if args['prod']:
-    config_file = 'prod.yaml'
-    warnings.filterwarnings('ignore')
-    print('Running in Production')
-else:
-    config_file = 'dev.yaml'
-    print('Running in Dev')
-
-with open(config_file) as f:
-    config = yaml.load(f)
+from model_eval import *
+from augmentations import *
+from start_train import train_classifier
 
 app = Flask(__name__, static_folder="./build", static_url_path="/")
 socketio = SocketIO(app, cors_allowed_origins='*', logger=True)
@@ -167,9 +157,6 @@ def handle_input(data):
 
 @socketio.on('train')
 def handle_input(optionsDict):
-    from augmentations import *
-    import json
-    import os
     path_to_aug_json = "aug.json"
     path_to_defaug_json = "defaug.json"
 
@@ -195,7 +182,7 @@ def handle_input(optionsDict):
     model_mapping = {
         'EfficientNet': 'efficientnet',
         '2 Layer ConvNet': '2layer_conv',
-        'From ResNet50': 'resnet'
+        'ResNet50': 'resnet'
         }
 
     # Choosing augmentation
@@ -206,20 +193,18 @@ def handle_input(optionsDict):
     elif optionsDict['aug'] == 'No augmentation':
         new_train_data_root = train_data_root
 
-    model_path,run_id = train_classifier(new_train_data_root, test_data_root, run_id, train_type=weight_mapping[optionsDict['weights']], cnn_model=model_mapping[optionsDict['model']])
+    # model_path,run_id = train_classifier(new_train_data_root, test_data_root, train_type=weight_mapping[optionsDict['weights']], cnn_model=model_mapping[optionsDict['model']])
 
-    ## Model evaluation
-    from model_eval import *
-    model_path = "final_model_test.h5"
-    model_eval_fns(test_data_root, model_path, run_id)
+    # ## Model evaluation
+    # model_path = "final_model_test.h5"
+    # model_eval_fns(test_data_root, model_path, run_id)
 
-    ##Model visulalization
-    from model_viz import visualize_main
-
-    viz_classes = ['2','5']
-    visualize_main(test_data_root, model_path, run_id, viz_classes)
+    # ##Model visulalization
+    # viz_classes = ['2','5']
+    # visualize_main(test_data_root, model_path, run_id, viz_classes)
+    return emit('train', True)
 
 if __name__ == '__main__':
-    app.config['SECRET_KEY'] = config['socket_secret']
+    app.config['SECRET_KEY'] = 'BlaBlaBla'
     CORS(app)
     socketio.run(app)
