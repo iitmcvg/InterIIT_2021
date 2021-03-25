@@ -3,6 +3,7 @@ data-pre
 data-post
 data-augmented
 .venv
+data-eval
 
 __pycache__
 *.json

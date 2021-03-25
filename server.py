@@ -7,6 +7,7 @@ import random
 import string
 import shutil
 import json
+import base64
 
 from flask           import Flask, request
 from flask_cors      import CORS
@@ -44,11 +45,18 @@ def handler(path):
 
 @socketio.on('predict')
 def handle_input(images):
+    data = images.replace("data:image/jpeg;base64,", "")
+    data = data.replace("data:image/png;base64,", "")
+    imgdata = base64.b64decode(data)
+    with open("./data-eval/imageToSave.jpeg", "wb") as fh:
+        fh.write(imgdata)
+    fh.close()
     pieValues = []
     with open('validate.csv') as file:
         reader = csv.DictReader(file, delimiter=',')
         for index, row in enumerate(reader):
             pieValues.append({'name':row['SignName'],'value':row['Value'],'title':row['Title']})
+    file.close()
     return emit('predict',pieValues)
 
 @socketio.on('dirlist')
