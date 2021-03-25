@@ -2,10 +2,28 @@
 Repository for the Bosch's Traffic Sign Recognition challenge 
 
 Usage:
+- Augmentations  
+We can get the augmentations config file (aug.json) from the UI, or you can manually provide it
+```
+from augmentations import *
+import json
+import os
+path_to_aug_json = "aug.json"
+
+with open(path_to_aug_json) as f:
+  data = json.load(f)
+
+train_data_root = "datasets/Train_dummy/"
+new_train_data_root = "datasets/Train_dummy_augmented/"
+os.makedirs(new_train_data_root,exist_ok=True)
+
+generate_augented_dataset(data, train_data_root, new_train_data_root)
+```
+
 - Training our model
 
 ```
-new_train_data_root = "datasets/Train_dummy/"
+new_train_data_root = "datasets/Train_dummy_augmented/"
 test_data_root = "datasets/Test_dataset_48_classes"
 
 run_id = 'a56e04bce6fc41949f03f187221be156'
