@@ -37,11 +37,16 @@ def save_train_curves(history, path):
     plt.savefig(path+"loss.png")
 
 
-def train_classifier(train_data_root, test_data_root):
+def train_classifier(train_data_root, test_data_root, train_type='pretrained', given_model_path = None):
     '''
         Train the classifier model 
         and log results to MLFlow server
         and to our UI backend
+
+        train_type 
+         -> pretrained
+         -> best_weights
+         -> scratch
     '''
     folder_path = "run_latest/"
     os.makedirs(folder_path, exist_ok=True)
@@ -89,7 +94,12 @@ def train_classifier(train_data_root, test_data_root):
         #                                               include_top=False,
         #                                               weights='imagenet')
         base_model = EfficientNetB0(include_top=False, weights='imagenet')
-
+        if train_type == 'best_weights':
+            model_full = tf.keras.models.load_model(given_model_path)
+            base_model = model_full.get_layer('efficientnetb0')
+        if train_type == 'scratch':
+            base_model = EfficientNetB0(include_top=False)
+        
 
         image_batch, label_batch = next(iter(train_dataset))
         feature_batch = base_model(image_batch)
@@ -138,6 +148,9 @@ def train_classifier(train_data_root, test_data_root):
         for layer in base_model.layers[:fine_tune_at]:
             layer.trainable =  False
 
+        if train_type == 'scratch':
+            for layer in base_model.layers:
+                layer.trainable =  True
 
         model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
               optimizer = tf.keras.optimizers.Adam(lr=base_learning_rate/10),
