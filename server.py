@@ -14,6 +14,7 @@ from flask_cors      import CORS
 from flask_socketio  import SocketIO, emit, disconnect
 
 from augment import augmentation
+import model_eval as modelEval
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--prod",action='store_true',help="Production configs are applied")
@@ -48,11 +49,12 @@ def handle_input(images):
     data = images.replace("data:image/jpeg;base64,", "")
     data = data.replace("data:image/png;base64,", "")
     imgdata = base64.b64decode(data)
-    with open("./data-eval/imageToSave.jpeg", "wb") as fh:
+    with open("./data-eval/imageToSave.png", "wb") as fh:
         fh.write(imgdata)
     fh.close()
+    modelEval.predict_to_csv('./data-eval/imageToSave.png')
     pieValues = []
-    with open('validate.csv') as file:
+    with open('predict_backend.csv') as file:
         reader = csv.DictReader(file, delimiter=',')
         for index, row in enumerate(reader):
             pieValues.append({'name':row['SignName'],'value':row['Value'],'title':row['Title']})
