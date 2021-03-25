@@ -13,6 +13,11 @@ from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.applications import EfficientNetB0
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D,Dropout,Dense,Flatten,MaxPooling2D
+from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.callbacks import ModelCheckpoint,LearningRateScheduler
+
 import mlflow.tensorflow
 
 mlflow.tensorflow.autolog()
@@ -36,17 +41,54 @@ def save_train_curves(history, path):
     plt.legend(['train', 'val'], loc='upper left')
     plt.savefig(path+"loss.png")
 
+def cnn_model():
+    model = Sequential()
 
-def train_classifier(train_data_root, test_data_root, train_type='pretrained', given_model_path = None):
+    IMG_SIZE = 224
+    NUM_CLASSES = 48
+    
+    model.add(Conv2D(32, (3, 3), padding='same',
+                     input_shape=( IMG_SIZE, IMG_SIZE ,3),
+                     activation='relu'))
+    model.add(Conv2D(32, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))
+
+    model.add(Conv2D(64, (3, 3), padding='same',
+                     activation='relu'))
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))
+
+    model.add(Conv2D(128, (3, 3), padding='same',
+                     activation='relu'))
+    model.add(Conv2D(128, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))
+
+    model.add(Flatten())
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(NUM_CLASSES, activation='softmax'))
+
+    model.summary()
+    return model
+
+def train_classifier(train_data_root, test_data_root, train_type='pretrained', cnn_model = 'efficientnet', given_model_path = None):
     '''
         Train the classifier model 
         and log results to MLFlow server
         and to our UI backend
 
         train_type 
-         -> pretrained
-         -> best_weights
-         -> scratch
+         -> pretrained   - imagenet weights
+         -> best_weights - from the best model we provide
+         -> scratch      - completely from scratch
+        
+        cnn_model
+         -> efficientnet 
+         -> 2layer_conv
+         -> resnet
     '''
     folder_path = "run_latest/"
     os.makedirs(folder_path, exist_ok=True)
@@ -89,10 +131,11 @@ def train_classifier(train_data_root, test_data_root, train_type='pretrained', g
         # Create the base model from the pre-trained model MobileNet V2
         IMG_SHAPE = (224, 224) + (3,)
 
+        if cnn_model == 'resnet':
+            base_model = tf.keras.applications.ResNet152V2(input_shape=IMG_SHAPE,
+                                                        include_top=False,
+                                                        weights='imagenet')
 
-        #base_model = tf.keras.applications.ResNet152V2(input_shape=IMG_SHAPE,
-        #                                               include_top=False,
-        #                                               weights='imagenet')
         base_model = EfficientNetB0(include_top=False, weights='imagenet')
         if train_type == 'best_weights':
             model_full = tf.keras.models.load_model(given_model_path)
@@ -151,6 +194,9 @@ def train_classifier(train_data_root, test_data_root, train_type='pretrained', g
         if train_type == 'scratch':
             for layer in base_model.layers:
                 layer.trainable =  True
+
+        if cnn_model == '2layer_conv':
+            model = cnn_model()
 
         model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
               optimizer = tf.keras.optimizers.Adam(lr=base_learning_rate/10),
