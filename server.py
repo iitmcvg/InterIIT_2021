@@ -15,10 +15,10 @@ from flask_socketio  import SocketIO, emit, disconnect
 
 from model_viz import visualize_main
 from augment import augmentation
-# import model_eval as modelEval
+import model_eval as modelEval
 
 from model_eval import *
-from augmentations import *
+import augmentations
 from start_train import train_classifier
 
 app = Flask(__name__, static_folder="./build", static_url_path="/")
@@ -42,7 +42,7 @@ def handle_input(images):
     with open("./data-eval/imageToSave.png", "wb") as fh:
         fh.write(imgdata)
     fh.close()
-    # modelEval.predict_to_csv('./data-eval/imageToSave.png')
+    modelEval.predict_to_csv('./data-eval/imageToSave.png')
     pieValues = []
     headerList = ['Value', 'SignName']
     with open('combined_predict.csv', 'w', newline='') as outcsv:
@@ -200,21 +200,21 @@ def handle_input(optionsDict):
 
     # Choosing augmentation
     if optionsDict['aug'] == 'Configured params':
-        generate_augented_dataset(aug, train_data_root, new_train_data_root)
+        augmentations.generate_augented_dataset(aug, train_data_root, new_train_data_root)
     elif optionsDict['aug'] == 'Default params':
-        generate_augented_dataset(defaug, train_data_root, new_train_data_root)
+        augmentations.generate_augented_dataset(defaug, train_data_root, new_train_data_root)
     elif optionsDict['aug'] == 'No augmentation':
         new_train_data_root = train_data_root
 
-    # model_path,run_id = train_classifier(new_train_data_root, test_data_root, train_type=weight_mapping[optionsDict['weights']], cnn_model=model_mapping[optionsDict['model']])
+    model_path,run_id = train_classifier(new_train_data_root, test_data_root, train_type=weight_mapping[optionsDict['weights']], cnn_model=model_mapping[optionsDict['model']])
 
     # ## Model evaluation
-    # model_path = "final_model_test.h5"
-    # model_eval_fns(test_data_root, model_path, run_id)
+    model_path = "final_model_test.h5"
+    model_eval_fns(test_data_root, model_path, run_id)
 
     # ##Model visulalization
-    # viz_classes = ['2','5']
-    # visualize_main(test_data_root, model_path, run_id, viz_classes)
+    viz_classes = ['2','5']
+    visualize_main(test_data_root, model_path, run_id, viz_classes)
     return emit('train', True)
 
 if __name__ == '__main__':
