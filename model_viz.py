@@ -134,8 +134,7 @@ def activation_maps(model_path, test_dir, layers_name, viz_classes, run_id, img_
                     ax[i,j].set_yticklabels([])
                     ax[i,j].set_xticklabels([])
             # plt.title("{} layer visualization".format(layer_name))
-            idf = img_path.split("/")[-2:]
-            idf = idf[0] + "_" +idf[1].split(".")[0]
+            idf = label
             os.makedirs("run_latest/interm_outputs/{}/".format(idf),exist_ok=True)
             path = 'run_latest/interm_outputs/{}/{}.jpg'.format(idf,layer_name)
             fig.savefig(path)
