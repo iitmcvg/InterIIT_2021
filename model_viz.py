@@ -169,7 +169,7 @@ def activation_maximization_map(model_path):
         grads = tape.gradient(loss_value, input_img_data)
         normalized_grads = grads / (tf.sqrt(tf.reduce_mean(tf.square(grads))) + 1e-5)
         input_img_data.assign_add(normalized_grads * step_size)
-    cv2.imsave("run_latest/activation_max_map",input_img_data)
+    cv2.imwrite("run_latest/activation_max_map",input_img_data)
 
 def visualize_main(test_dir, model_path, run_id, viz_classes):
     test_dir = "/home/lordgrim/Final_interiit/datasets/Train_dummy/"

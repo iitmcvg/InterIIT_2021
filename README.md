@@ -106,3 +106,19 @@ Our classes (including 5 addditional classes) are
     45 : "speed bump hump",
     46 : "No Right",
     47 : "Priority to",
+
+Apart from our own custom UI, we are also leveraging MLflow which is an open source platform to manage the ML lifecycle, including experimentation, reproducibility, deployment, and a central model registry.
+
+To access the MLFlow UI, you can run in the root folder
+```
+  mlflow ui 
+```
+
+To start an mlflow-server manually with a GCP backend and SQLite database
+```
+mlflow server \
+--backend-store-uri sqlite:///mlflow.db \
+--default-artifact-root gs://mlflow_artifacts_storage/artifacts/ \
+--host 0.0.0.0
+```
+Use `mlflow.set_tracking_uri("https://35.198.166.98:5000") ` in code to log to a remote mlflow server
