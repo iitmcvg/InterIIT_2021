@@ -149,9 +149,13 @@ def handle_input(transform):
 
 @socketio.on('augment')
 def handle_input(data):
-    dump = open("aug.json", "a")
-    json.dump(data, dump)
+    dump = open(data['file'], "a")
+    json.dump(data['data'], dump)
     dump.close()
+
+@socketio.on('train')
+def handle_input(json):
+    print(json)
 
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = config['socket_secret']
