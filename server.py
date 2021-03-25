@@ -7,6 +7,7 @@ import random
 import string
 import shutil
 import json
+import base64
 
 from flask           import Flask, request
 from flask_cors      import CORS
@@ -44,7 +45,35 @@ def handler(path):
 
 @socketio.on('predict')
 def handle_input(images):
-    return emit('predict','Hi')
+    data = images.replace("data:image/jpeg;base64,", "")
+    data = data.replace("data:image/png;base64,", "")
+    imgdata = base64.b64decode(data)
+    with open("./data-eval/imageToSave.jpeg", "wb") as fh:
+        fh.write(imgdata)
+    fh.close()
+    pieValues = []
+    with open('validate.csv') as file:
+        reader = csv.DictReader(file, delimiter=',')
+        for index, row in enumerate(reader):
+            pieValues.append({'name':row['SignName'],'value':row['Value'],'title':row['Title']})
+    file.close()
+    return emit('predict',pieValues)
+
+@socketio.on('results')
+def handle_input(results):
+    r = open("./run_latest/conf_mat.png", 'rb')
+    pca = open("./run_latest/pca_analysis.png", 'rb')
+    matrixValues=[]
+    with open('./run_latest/classification_report.csv') as file:
+        reader = csv.DictReader(file, delimiter=',')
+        for index, row in enumerate(reader):
+            matrixValues.append({'precision':row['precision'],'recall':row['recall'],'f1_score':row['f1-score'],'support':row['support']})
+    file.close()
+    pca_analysis=pca.read()
+    data = r.read()
+    emit('results',{"img": data,"matrix": matrixValues,"pca": pca_analysis})
+    r.close()
+    pca.close()
 
 @socketio.on('dirlist')
 def handle_input():
