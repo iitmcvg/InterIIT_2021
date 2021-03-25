@@ -125,6 +125,40 @@ def model_eval_fns(test_dataset_dir, model_path, classes, run_id):
         mlflow.log_artifact(path2)
         mlflow.log_artifact(path3)
 
+import heapq
+
+def predict_to_csv(img_path, model_path = "final_model_test.h5"):
+
+    model = tf.keras.models.load_model(model_path)
+    with open('mapping.pickle', 'rb') as handle:
+        mapping = pickle.load(handle)
+    sign_names = pd.read_csv('signnames_added_classes.csv')
+
+    IMG_SIZE = 224
+    NUM_CLASSES = 48
+
+    image = cv2.imread(img_path)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = cv2.resize(image,(IMG_SIZE,IMG_SIZE))
+    plt.figure()
+    plt.imshow(image)
+    image = np.expand_dims(image, axis=0)
+    pred = model.predict(image)[0]
+
+    top5softmax = np.zeros((5,1))
+    top5softmax = heapq.nlargest(5, range(NUM_CLASSES), pred.take)
+    output_dict = {}
+
+    path = "predict_backend.csv"
+    
+    for i in range(5):
+        prob = pred[top5softmax[i]]
+        output_dict[prob] = sign_names["SignName"][int(mapping[top5softmax[i]])]
+        with open(path, 'w') as f:
+            for key in output_dict.keys():
+                f.write("%f, %s\n" % (key, output_dict[key]))
+    return path 
+
 if __name__ == "__main__":
     test_dataset_dir = "/home/lordgrim/Final_interiit/datasets/Test_dataset_48_classes"
     model_path = "/home/lordgrim/Final_interiit/latest_model"
