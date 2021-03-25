@@ -171,7 +171,7 @@ def train_classifier(train_data_root, test_data_root):
         ## Save the model
         model.load_weights(model_path)
 
-        model_path_full = 'latest_model'
+        model_path_full = 'final_model_test.h5'
         model.save(model_path_full)
 
         ## MLFlow logging

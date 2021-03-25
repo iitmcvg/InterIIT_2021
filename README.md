@@ -1,6 +1,8 @@
 # InterIIT_2021
 Repository for the Bosch's Traffic Sign Recognition challenge 
 
+The entire pipleine has been integrated in our UI, however if there is a need all the deep learning modules can be called individually as follows:
+
 Usage:
 - Augmentations  
 We can get the augmentations config file (aug.json) from the UI, or you can manually provide it
@@ -13,46 +15,48 @@ path_to_aug_json = "aug.json"
 with open(path_to_aug_json) as f:
   data = json.load(f)
 
-train_data_root = "datasets/Train_dummy/"
-new_train_data_root = "datasets/Train_dummy_augmented/"
+train_data_root = "Train_dummy/"
+new_train_data_root = "Train_dummy_augmented/"
 os.makedirs(new_train_data_root,exist_ok=True)
 
 generate_augented_dataset(data, train_data_root, new_train_data_root)
 ```
 
-- Training our model
+- Training our model  
+For training the model and logging the results for our UI and the MLFlow server
 
 ```
-new_train_data_root = "datasets/Train_dummy_augmented/"
-test_data_root = "datasets/Test_dataset_48_classes"
+new_train_data_root = "Train_dummy_augmented/"
+test_data_root = "Test_dataset_48_classes"
 
 run_id = 'a56e04bce6fc41949f03f187221be156'
 model_path,run_id = train_classifier(new_train_data_root, test_data_root, run_id)
 ```
 
-- Model evaluation
+- Model evaluation  
+Computing evaluation metrics and logging them
 ```
 from model_eval import *
 
-## Model evaluation
-test_dataset_dir = "datasets/Test_dummy/"
+test_data_root = "Test_dummy/"
 model_path = "latest_model"
-model_eval_fns(test_dataset_dir, model_path, classes, run_id)
+model_eval_fns(test_data_root, model_path, classes, run_id)
 ```
 
-- Model visulalization
+- Model visulalization  
+Model visulalization techniques such as occlusion sensitivity maps, activation maps,etc
 ```
 from model_viz import *
-test_dir = "/home/lordgrim/Final_interiit/datasets/Train_dummy/"
-model_path = "/home/lordgrim/Final_interiit/final_model_test.h5"
+test_data_root = "Train_dummy/"
+model_path = "final_model_test.h5"
 
 run_id = 'a56e04bce6fc41949f03f187221be156'
 viz_classes = ['2','5'] 
 
-visualize_main(test_dir, model_path, run_id, viz_classes)
+visualize_main(test_data_root, model_path, run_id, viz_classes)
 ```
 
-Our classes are
+Our classes (including 5 addditional classes) are
 
     0 : "Speed limit 20km/h",
     1 : "Speed limit 30km/h",
