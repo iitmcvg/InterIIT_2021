@@ -40,7 +40,17 @@ model_path = "latest_model"
 model_eval_fns(test_dataset_dir, model_path, classes, run_id)
 ```
 
+- Model visulalization
+```
+from model_viz import *
+test_dir = "/home/lordgrim/Final_interiit/datasets/Train_dummy/"
+model_path = "/home/lordgrim/Final_interiit/final_model_test.h5"
 
+run_id = 'a56e04bce6fc41949f03f187221be156'
+viz_classes = ['2','5'] 
+
+visualize_main(test_dir, model_path, run_id, viz_classes)
+```
 
 Our classes are
 
