@@ -78,7 +78,7 @@ class augmentation:
             transformed_img = self.transform(image = img)['image']
             transformed_imgs.append(transformed_img)
             if save :                                                                  ### saving image to directory
-                plt.imsave(self.path_save + '/' + str(count) + '.png', transformed_img)
+                cv2.imwrite(self.path_save + '/' + str(count) + '.png', transformed_img)
                 data.append([count, '\Train_augmented' + '\\' + self.dir + '/' + str(count) + '.png'])
                 count += 1
 
