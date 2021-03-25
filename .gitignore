@@ -5,6 +5,10 @@ data-augmented
 .venv
 data-eval
 
+train
+train_augmented
+mlruns
+
 __pycache__
 *.json
 *.h5
