@@ -9,6 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { socket } from '../../components/Socket';
+import './results.css';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -36,24 +37,47 @@ export default class ResultsGrid extends React.Component {
       c: 0,
       matrixData: [],
       pca: [],
+      full_acc: [],
+      finetune_acc: [],
+      full_loss: [],
+      finetune_loss: [],
     };
   }
   getData = (data) => {
     const blob = new Blob([data['img']], { type: 'image/png' });
     const pcaBlob = new Blob([data['pca']], { type: 'image/png' });
+    const fullaccBlob = new Blob([data['full_acc']], { type: 'image/png' });
+    const fulllossBlob = new Blob([data['full_loss']], { type: 'image/png' });
+    const fineLossBlob = new Blob([data['finetune_loss']], {
+      type: 'image/png',
+    });
+    const fineaccBlob = new Blob([data['finetune_acc']], { type: 'image/png' });
     var newlist = [];
     var newPCA = [];
+    var fullacc = [];
+    var fullloss = [];
+    var fineacc = [];
+    var fineloss = [];
+
     if (this.state.c === data['c']) {
       newlist = this.state.images;
       newPCA = this.state.pca;
     }
     newlist.push(blob);
     newPCA.push(pcaBlob);
+    fullacc.push(fullaccBlob);
+    fullloss.push(fulllossBlob);
+    fineacc.push(fineaccBlob);
+    fineloss.push(fineLossBlob);
     this.setState({
       images: newlist,
       c: data['c'],
       matrixData: data['matrix'],
       pca: newPCA,
+      full_acc: fullacc,
+      finetune_acc: fineacc,
+      full_loss: fullacc,
+      finetune_loss: fineloss,
     });
     console.log(this.state.matrixData);
   };
@@ -72,7 +96,7 @@ export default class ResultsGrid extends React.Component {
           {this.state.images &&
             this.state.images.map((item, index) => {
               return (
-                <Grid item xs={6} key={index} style={{ height: '50vh' }}>
+                <Grid item xs={6} key={index} className='heading'>
                   <h2>Confusion Matrix</h2>
                   <img
                     src={URL.createObjectURL(item)}
@@ -89,8 +113,76 @@ export default class ResultsGrid extends React.Component {
           {this.state.pca &&
             this.state.pca.map((item, index) => {
               return (
-                <Grid item xs={4} key={index} style={{ height: '50vh' }}>
+                <Grid item xs={6} key={index} className='heading'>
                   <h2>PCA Analysis</h2>
+                  <img
+                    src={URL.createObjectURL(item)}
+                    style={{
+                      position: 'inherit',
+                      height: '100%',
+                      width: '100%',
+                    }}
+                    alt={index}
+                  />
+                </Grid>
+              );
+            })}
+          {this.state.full_loss &&
+            this.state.full_loss.map((item, index) => {
+              return (
+                <Grid item xs={6} key={index} className='heading'>
+                  <h2>Full Loss Train</h2>
+                  <img
+                    src={URL.createObjectURL(item)}
+                    style={{
+                      position: 'inherit',
+                      height: '100%',
+                      width: '100%',
+                    }}
+                    alt={index}
+                  />
+                </Grid>
+              );
+            })}
+          {this.state.full_acc &&
+            this.state.full_acc.map((item, index) => {
+              return (
+                <Grid item xs={6} key={index} className='heading'>
+                  <h2>Full Acc Train</h2>
+                  <img
+                    src={URL.createObjectURL(item)}
+                    style={{
+                      position: 'inherit',
+                      height: '100%',
+                      width: '100%',
+                    }}
+                    alt={index}
+                  />
+                </Grid>
+              );
+            })}
+          {this.state.finetune_acc &&
+            this.state.finetune_acc.map((item, index) => {
+              return (
+                <Grid item xs={6} key={index} className='heading'>
+                  <h2>Fine Tune Acc</h2>
+                  <img
+                    src={URL.createObjectURL(item)}
+                    style={{
+                      position: 'inherit',
+                      height: '100%',
+                      width: '100%',
+                    }}
+                    alt={index}
+                  />
+                </Grid>
+              );
+            })}
+          {this.state.finetune_loss &&
+            this.state.finetune_loss.map((item, index) => {
+              return (
+                <Grid item xs={6} key={index} className='heading'>
+                  <h2>Fine Tune Loss</h2>
                   <img
                     src={URL.createObjectURL(item)}
                     style={{
