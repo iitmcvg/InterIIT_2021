@@ -15,7 +15,7 @@ from flask_socketio  import SocketIO, emit, disconnect
 
 from model_viz import visualize_main
 from augment import augmentation
-import model_eval as modelEval
+# import model_eval as modelEval
 
 from model_eval import *
 from augmentations import *
@@ -42,7 +42,7 @@ def handle_input(images):
     with open("./data-eval/imageToSave.png", "wb") as fh:
         fh.write(imgdata)
     fh.close()
-    modelEval.predict_to_csv('./data-eval/imageToSave.png')
+    # modelEval.predict_to_csv('./data-eval/imageToSave.png')
     pieValues = []
     headerList = ['Value', 'SignName']
     with open('combined_predict.csv', 'w', newline='') as outcsv:
@@ -66,10 +66,23 @@ def handle_input(results):
     r = open("./run_latest/conf_mat.png", 'rb')
     pca = open("./run_latest/pca_analysis.png", 'rb')
     matrixValues=[]
-    with open('./run_latest/classification_report.csv') as file:
+
+    with open('combined_classification.csv', 'w', newline='') as outcsv:
+        writer = csv.DictWriter(outcsv, fieldnames = ["SignName","precision","recall","f1-score","support"])
+        writer.writeheader()
+
+        with open('./run_latest/classification_report.csv', 'r', newline='') as incsv:
+            reader = csv.reader(incsv)
+            writer.writerows({'SignName': row[0],'precision': row[1],"recall": row[2],"f1-score": row[3],"support": row[4]} for row in reader)
+        incsv.close()
+    outcsv.close()
+    with open('combined_classification.csv') as file:
         reader = csv.DictReader(file, delimiter=',')
         for index, row in enumerate(reader):
-            matrixValues.append({'precision':row['precision'],'recall':row['recall'],'f1_score':row['f1-score'],'support':row['support']})
+            matrixValues.append({'SignName':row['SignName'],'precision':row['precision'],'recall':row['recall'],'f1_score':row['f1-score'],'support':row['support']})
+
+    file.close()
+
     file.close()
     pca_analysis=pca.read()
     data = r.read()
