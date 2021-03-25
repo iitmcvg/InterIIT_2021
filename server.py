@@ -62,16 +62,18 @@ def handle_input(images):
 @socketio.on('results')
 def handle_input(results):
     r = open("./run_latest/conf_mat.png", 'rb')
+    pca = open("./run_latest/pca_analysis.png", 'rb')
     matrixValues=[]
     with open('./run_latest/classification_report.csv') as file:
         reader = csv.DictReader(file, delimiter=',')
         for index, row in enumerate(reader):
             matrixValues.append({'precision':row['precision'],'recall':row['recall'],'f1_score':row['f1-score'],'support':row['support']})
     file.close()
-    
+    pca_analysis=pca.read()
     data = r.read()
-    emit('results',{"img": data,"matrix": matrixValues})
+    emit('results',{"img": data,"matrix": matrixValues,"pca": pca_analysis})
     r.close()
+    pca.close()
 
 @socketio.on('dirlist')
 def handle_input():
