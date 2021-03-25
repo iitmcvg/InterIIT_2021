@@ -16,6 +16,7 @@ const NavBar = (props) => {
   const list = () => {
     return [
       { path: '/augment', name: 'AUGMENT' },
+      { path: '/train', name: 'TRAIN' },
       { path: '/validate', name: 'VALIDATE' },
       { path: '/results', name: 'RESULTS' },
     ];
