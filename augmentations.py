@@ -104,7 +104,7 @@ def generate_augented_dataset(config_json, train_dir, new_train_dir):
                         "contrast_factor": 0.2, "motion_blur_factor": 4, "fog_factor": 0.4, "rain_factor": 3,  'generate_occlusion':1}
 
         aug = augmentation(class_id=i, dict_transform=transform_list, transform_vals=transform_vals,
-                        num_target_imgs=config_json['num'], flag = 'op')
+                        num_target_imgs=int(config_json['num']), flag = 'op')
         aug.load_data( train_dir, new_train_dir)
         aug.setup_pipeline(dict_transform=transform_list)
         aug.augment(save=True)

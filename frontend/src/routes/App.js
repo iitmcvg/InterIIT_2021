@@ -8,6 +8,7 @@ import Augment from '../views/Augment/augment';
 import Training from '../views/Training/training';
 import Predict from '../views/Predict/predict';
 import Results from '../views/Results/results';
+import Visuals from '../views/Visualization/visual';
 
 var hist = createBrowserHistory();
 
@@ -17,6 +18,7 @@ var routes = [
   { path: '/train', component: Training },
   { path: '/inference', component: Predict },
   { path: '/results', component: Results },
+  { path: '/visualization', component: Visuals },
 ];
 
 export default class App extends React.Component {

@@ -5,7 +5,13 @@ data-augmented
 .venv
 data-eval
 
+train
+train_augmented
+mlruns
+
 __pycache__
 *.json
 *.h5
 predict_backend.csv
+
+frontend/node_modules

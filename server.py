@@ -102,6 +102,32 @@ def handle_input(results):
     r.close()
     pca.close()
 
+@socketio.on('visualize')
+def handle_input(results):
+    r = open("run_latest/occ_maps/occ_map_2.png", 'rb')
+    pca = open("run_latest/occ_maps/occ_map_5.png", 'rb')
+
+    file.close()
+
+    file.close()
+    pca_analysis=pca.read()
+    data = r.read()
+    train = open("run_latest/interm_outputs/2/block2a_activation.jpg",'rb')
+    finetune_acc = train.read()
+    train.close()
+    train = open('run_latest/interm_outputs/2/block3a_activation.jpg','rb')
+    finetune_loss = train.read()
+    train.close()
+    train = open('run_latest/interm_outputs/5/block2a_activation.jpg','rb')
+    full_loss = train.read()
+    train.close()
+    train = open('run_latest/interm_outputs/5/block3a_activation.jpg','rb')
+    full_acc = train.read()
+    train.close()
+    emit('results',{"img": data,"pca": pca_analysis,'finetune_acc': finetune_acc,'finetune_loss': finetune_loss,'full_loss': full_loss,'full_acc': full_acc})
+    r.close()
+    pca.close()
+
 @socketio.on('dirlist')
 def handle_input():
     classnames = []
