@@ -108,8 +108,8 @@ def handle_input(transform):
 
 @socketio.on('augment')
 def handle_input(data):
-    dump = open("aug.json", "a")
-    json.dump(data, dump)
+    dump = open(data['file']+".json", "w")
+    json.dump(data['data'], dump)
     dump.close()
 
 if __name__ == '__main__':

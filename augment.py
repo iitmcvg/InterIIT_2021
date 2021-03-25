@@ -33,7 +33,7 @@ class augmentation:
             self.path_load = os.path.join(self.dir_load, self.dir)
         else:
             self.path_load = self.dir_load
-        self.imgs = [mpimg.imread(file) for file in
+        self.imgs = [cv2.imread(file) for file in
                 glob.glob(self.path_load + "/*.png")]
         self.len = len(self.imgs)
 
@@ -73,7 +73,7 @@ class augmentation:
             transformed_img = self.transform(image = img)['image']
             transformed_imgs.append(transformed_img)
             if save :                                                                  ### saving image to directory
-                plt.imsave(self.path_save + '/' + str(count) + '.png', transformed_img)
+                cv2.imwrite(self.path_save + '/' + str(count) + '.png', transformed_img)
                 data.append([count, '\Train_augmented' + '\\' + self.dir + '/' + str(count) + '.png'])
                 count += 1
 
