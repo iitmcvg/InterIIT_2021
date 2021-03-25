@@ -14,7 +14,7 @@ from flask_cors      import CORS
 from flask_socketio  import SocketIO, emit, disconnect
 
 from augment import augmentation
-# import model_eval as modelEval
+import model_eval as modelEval
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--prod",action='store_true',help="Production configs are applied")
@@ -52,7 +52,7 @@ def handle_input(images):
     with open("./data-eval/imageToSave.png", "wb") as fh:
         fh.write(imgdata)
     fh.close()
-    # modelEval.predict_to_csv('./data-eval/imageToSave.png')
+    modelEval.predict_to_csv('./data-eval/imageToSave.png')
     pieValues = []
     headerList = ['Value', 'SignName']
     with open('combined_predict.csv', 'w', newline='') as outcsv:
