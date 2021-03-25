@@ -34,7 +34,7 @@ def get_classification_report(true_labels, pred_labels, run_id, target_names):
     
     with mlflow.start_run(run_id=run_id):
         for key in target_names:
-            mlflow.log_metric(key+" f1-score",class_report[key]['f1-score'])
+            mlflow.log_metric(key.replace("(","").replace(")","")+" f1-score",class_report[key]['f1-score'])
     df = pd.DataFrame(class_report).transpose()
     path = 'run_latest/classification_report.csv'
     df.to_csv(path)
@@ -99,8 +99,10 @@ def get_pca_plot(test_dataset_dir, model, classes):
     path = plot_representations(output_pca_data, labels, classes)
     return path
 
-def model_eval_fns(test_dataset_dir, model_path, classes, run_id):
+def model_eval_fns(test_dataset_dir, model_path, run_id):
 
+    with open('classes.pickle', 'rb') as handle:
+        classes = pickle.load(handle)
     IMG_SIZE=224
     NUM_CLASSES=48
 
@@ -137,6 +139,7 @@ def predict_to_csv(img_path, model_path = "final_model_test.h5"):
     with open('mapping.pickle', 'rb') as handle:
         mapping = pickle.load(handle)
     sign_names = pd.read_csv('signnames_added_classes.csv')
+    classes = dict(zip(list(sign_names['ClassId']), list(sign_names['SignName'])))
     IMG_SIZE = 224
     NUM_CLASSES = 48
 
@@ -162,7 +165,7 @@ def predict_to_csv(img_path, model_path = "final_model_test.h5"):
                 f.write("%f, %s\n" % (key, output_dict[key]))
     return path 
 
-if __name__ == "__main__":
-    test_dataset_dir = "/home/lordgrim/Final_interiit/datasets/Test_dataset_48_classes"
-    model_path = "/home/lordgrim/Final_interiit/latest_model"
-    model_eval_fns(test_dataset_dir, model_path, classes)
+# if __name__ == "__main__":
+#     test_dataset_dir = "/home/lordgrim/Final_interiit/datasets/Test_dataset_48_classes"
+#     model_path = "/home/lordgrim/Final_interiit/latest_model"
+    # model_eval_fns(test_dataset_dir, model_path, classes)
