@@ -1,18 +1,22 @@
-from sklearn import metrics
+from sklearn import metrics, decomposition
+
 import matplotlib.pyplot as plt
 
 import numpy as np
 import pandas as pd
 import seaborn as sn
 import tensorflow as tf
+
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.applications import EfficientNetB0
-from sklearn import decomposition
+
 
 import mlflow
+import pickle
+import cv2
 
 # n = no. of classes
 def get_confusion_matrix(true_labels, pred_labels,n):
@@ -133,7 +137,6 @@ def predict_to_csv(img_path, model_path = "final_model_test.h5"):
     with open('mapping.pickle', 'rb') as handle:
         mapping = pickle.load(handle)
     sign_names = pd.read_csv('signnames_added_classes.csv')
-
     IMG_SIZE = 224
     NUM_CLASSES = 48
 
