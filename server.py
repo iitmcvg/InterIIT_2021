@@ -154,8 +154,58 @@ def handle_input(data):
     dump.close()
 
 @socketio.on('train')
-def handle_input(json):
-    print(json)
+def handle_input(optionsDict):
+    from augmentations import *
+    import json
+    import os
+    path_to_aug_json = "aug.json"
+    path_to_defaug_json = "defaug.json"
+
+    with open(path_to_aug_json) as f:
+        aug = json.load(f)
+
+    with open(path_to_defaug_json) as f:
+        defaug = json.load(f)
+
+    train_data_root = "train/"
+    new_train_data_root = "train_augmented/"
+    test_data_root = "test/"
+    run_id = 'a56e04bce6fc41949f03f187221be156'
+
+    os.makedirs(new_train_data_root,exist_ok=True)
+
+    weight_mapping = {
+        'Pretrained weights': 'pretrained',
+        'Best Weights': 'best_weights',
+        'From scratch': 'scratch'
+        }
+
+    model_mapping = {
+        'EfficientNet': 'efficientnet',
+        '2 Layer ConvNet': '2layer_conv',
+        'From ResNet50': 'resnet'
+        }
+
+    # Choosing augmentation
+    if optionsDict['aug'] == 'Configured params':
+        generate_augented_dataset(aug, train_data_root, new_train_data_root)
+    elif optionsDict['aug'] == 'Default params':
+        generate_augented_dataset(defaug, train_data_root, new_train_data_root)
+    elif optionsDict['aug'] == 'No augmentation':
+        new_train_data_root = train_data_root
+
+    model_path,run_id = train_classifier(new_train_data_root, test_data_root, run_id, train_type=weight_mapping[optionsDict['weights']], cnn_model=model_mapping[optionsDict['model']])
+
+    ## Model evaluation
+    from model_eval import *
+    model_path = "final_model_test.h5"
+    model_eval_fns(test_data_root, model_path, run_id)
+
+    ##Model visulalization
+    from model_viz import visualize_main
+
+    viz_classes = ['2','5']
+    visualize_main(test_data_root, model_path, run_id, viz_classes)
 
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = config['socket_secret']
