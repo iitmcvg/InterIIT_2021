@@ -18,7 +18,7 @@ from augment import augmentation
 import model_eval as modelEval
 
 from model_eval import *
-from augmentations import *
+import augmentations
 from start_train import train_classifier
 
 app = Flask(__name__, static_folder="./build", static_url_path="/")
@@ -66,10 +66,23 @@ def handle_input(results):
     r = open("./run_latest/conf_mat.png", 'rb')
     pca = open("./run_latest/pca_analysis.png", 'rb')
     matrixValues=[]
-    with open('./run_latest/classification_report.csv') as file:
+
+    with open('combined_classification.csv', 'w', newline='') as outcsv:
+        writer = csv.DictWriter(outcsv, fieldnames = ["SignName","precision","recall","f1-score","support"])
+        writer.writeheader()
+
+        with open('./run_latest/classification_report.csv', 'r', newline='') as incsv:
+            reader = csv.reader(incsv)
+            writer.writerows({'SignName': row[0],'precision': row[1],"recall": row[2],"f1-score": row[3],"support": row[4]} for row in reader)
+        incsv.close()
+    outcsv.close()
+    with open('combined_classification.csv') as file:
         reader = csv.DictReader(file, delimiter=',')
         for index, row in enumerate(reader):
-            matrixValues.append({'precision':row['precision'],'recall':row['recall'],'f1_score':row['f1-score'],'support':row['support']})
+            matrixValues.append({'SignName':row['SignName'],'precision':row['precision'],'recall':row['recall'],'f1_score':row['f1-score'],'support':row['support']})
+
+    file.close()
+
     file.close()
     pca_analysis=pca.read()
     data = r.read()
@@ -187,21 +200,21 @@ def handle_input(optionsDict):
 
     # Choosing augmentation
     if optionsDict['aug'] == 'Configured params':
-        generate_augented_dataset(aug, train_data_root, new_train_data_root)
+        augmentations.generate_augented_dataset(aug, train_data_root, new_train_data_root)
     elif optionsDict['aug'] == 'Default params':
-        generate_augented_dataset(defaug, train_data_root, new_train_data_root)
+        augmentations.generate_augented_dataset(defaug, train_data_root, new_train_data_root)
     elif optionsDict['aug'] == 'No augmentation':
         new_train_data_root = train_data_root
 
-    # model_path,run_id = train_classifier(new_train_data_root, test_data_root, train_type=weight_mapping[optionsDict['weights']], cnn_model=model_mapping[optionsDict['model']])
+    model_path,run_id = train_classifier(new_train_data_root, test_data_root, train_type=weight_mapping[optionsDict['weights']], cnn_model=model_mapping[optionsDict['model']])
 
     # ## Model evaluation
-    # model_path = "final_model_test.h5"
-    # model_eval_fns(test_data_root, model_path, run_id)
+    model_path = "final_model_test.h5"
+    model_eval_fns(test_data_root, model_path, run_id)
 
     # ##Model visulalization
-    # viz_classes = ['2','5']
-    # visualize_main(test_data_root, model_path, run_id, viz_classes)
+    viz_classes = ['2','5']
+    visualize_main(test_data_root, model_path, run_id, viz_classes)
     return emit('train', True)
 
 if __name__ == '__main__':
