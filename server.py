@@ -14,7 +14,7 @@ from flask_cors      import CORS
 from flask_socketio  import SocketIO, emit, disconnect
 
 from augment import augmentation
-import model_eval as modelEval
+# import model_eval as modelEval
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--prod",action='store_true',help="Production configs are applied")
@@ -52,7 +52,7 @@ def handle_input(images):
     with open("./data-eval/imageToSave.png", "wb") as fh:
         fh.write(imgdata)
     fh.close()
-    modelEval.predict_to_csv('./data-eval/imageToSave.png')
+    # modelEval.predict_to_csv('./data-eval/imageToSave.png')
     pieValues = []
     headerList = ['Value', 'SignName']
     with open('combined_predict.csv', 'w', newline='') as outcsv:
@@ -83,7 +83,19 @@ def handle_input(results):
     file.close()
     pca_analysis=pca.read()
     data = r.read()
-    emit('results',{"img": data,"matrix": matrixValues,"pca": pca_analysis})
+    train = open("./run_latest/finetune_train_acc.png",'rb')
+    finetune_acc = train.read()
+    train.close()
+    train = open('./run_latest/finetune_train_loss.png','rb')
+    finetune_loss = train.read()
+    train.close()
+    train = open('./run_latest/full_train_loss.png','rb')
+    full_loss = train.read()
+    train.close()
+    train = open('./run_latest/full_train_loss.png','rb')
+    full_acc = train.read()
+    train.close()
+    emit('results',{"img": data,"matrix": matrixValues,"pca": pca_analysis,'finetune_acc': finetune_acc,'finetune_loss': finetune_loss,'full_loss': full_loss,'full_acc': full_acc})
     r.close()
     pca.close()
 
