@@ -52,7 +52,7 @@ def handle_input(images):
     with open("./data-eval/imageToSave.png", "wb") as fh:
         fh.write(imgdata)
     fh.close()
-    # modelEval.predict_to_csv('./data-eval/imageToSave.png')
+    modelEval.predict_to_csv('./data-eval/imageToSave.png')
     pieValues = []
     headerList = ['Value', 'SignName']
     with open('combined_predict.csv', 'w', newline='') as outcsv:
