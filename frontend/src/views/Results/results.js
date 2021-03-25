@@ -204,7 +204,7 @@ export default class ResultsGrid extends React.Component {
                 <Table stickyHeader component={Paper} aria-label='sticky table'>
                   <TableHead>
                     <TableRow>
-                      <StyledTableCell>Index </StyledTableCell>
+                      <StyledTableCell>Class Name </StyledTableCell>
                       <StyledTableCell align='right'>Precision</StyledTableCell>
                       <StyledTableCell align='right'>Recall</StyledTableCell>
                       <StyledTableCell align='right'>F1-Score</StyledTableCell>
@@ -213,9 +213,9 @@ export default class ResultsGrid extends React.Component {
                   </TableHead>
                   <TableBody>
                     {this.state.matrixData.map((row, index) => (
-                      <StyledTableRow key={index}>
+                      <StyledTableRow key={row.SignName}>
                         <StyledTableCell component='th' scope='row'>
-                          {index}
+                          {row.SignName}
                         </StyledTableCell>
                         <StyledTableCell align='right'>
                           {row.precision}
