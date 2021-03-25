@@ -154,12 +154,8 @@ class UploadImages extends Component {
     fileReader.readAsDataURL(file);
     fileReader.onload = () => {
       var arrayBuffer = fileReader.result;
-      socket.emit('predict', {
-        name: file.name,
-        type: file.type,
-        size: file.size,
-        binary: arrayBuffer,
-      });
+      // console.log(arrayBuffer);
+      socket.emit('predict', arrayBuffer);
     };
 
     // this.getImgData();
