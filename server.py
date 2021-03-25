@@ -54,10 +54,20 @@ def handle_input(images):
     fh.close()
     modelEval.predict_to_csv('./data-eval/imageToSave.png')
     pieValues = []
-    with open('predict_backend.csv') as file:
+    headerList = ['Value', 'SignName']
+    with open('combined_predict.csv', 'w', newline='') as outcsv:
+        writer = csv.DictWriter(outcsv, fieldnames = ["Value", "SignName"])
+        writer.writeheader()
+
+        with open('predict_backend.csv', 'r', newline='') as incsv:
+            reader = csv.reader(incsv)
+            writer.writerows({'Value': row[0], 'SignName': row[1]} for row in reader)
+        incsv.close()
+    outcsv.close()
+    with open('combined_predict.csv') as file:
         reader = csv.DictReader(file, delimiter=',')
         for index, row in enumerate(reader):
-            pieValues.append({'name':row['SignName'],'value':row['Value'],'title':row['Title']})
+            pieValues.append({'name':row['SignName'],'value':row['Value'],'title':'Graph 1'})
     file.close()
     return emit('predict',pieValues)
 
@@ -139,9 +149,13 @@ def handle_input(transform):
 
 @socketio.on('augment')
 def handle_input(data):
-    dump = open("aug.json", "a")
-    json.dump(data, dump)
+    dump = open(data['file'], "a")
+    json.dump(data['data'], dump)
     dump.close()
+
+@socketio.on('train')
+def handle_input(json):
+    print(json)
 
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = config['socket_secret']
