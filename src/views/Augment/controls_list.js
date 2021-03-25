@@ -28,34 +28,6 @@ export const list = [
             }]
     },
     {
-        "categ": "Nature",
-        "list": [
-            {
-                disp: "Shadow",
-                name: "shadow",
-                min: 0,
-                max: 1,
-                step: 0.01,
-                def: 0
-            },
-            {
-                disp: "Fog",
-                name: "fog",
-                min: 0,
-                max: 1,
-                step: 0.01,
-                def: 0
-            },
-            {
-                disp: "Rain",
-                name: "rain",
-                min: 0,
-                max: 1,
-                step: 0.01,
-                def: 0
-            }]
-    },
-    {
         "categ": "Color",
         "list": [
             {
@@ -83,4 +55,40 @@ export const list = [
                 def: 0
             }]
     },
+    {
+        "categ": "Nature",
+        "list": [
+            {
+                disp: "Shadow",
+                name: "shadow",
+                min: 0,
+                max: 1,
+                step: 0.01,
+                def: 0
+            },
+            {
+                disp: "Fog",
+                name: "fog",
+                min: 0,
+                max: 1,
+                step: 0.01,
+                def: 0
+            },
+            {
+                disp: "Rain",
+                name: "rain",
+                min: 0,
+                max: 1,
+                step: 0.01,
+                def: 0
+            },
+            {
+                disp: "Occlusion",
+                name: "occlusion",
+                min: 0,
+                max: 1,
+                step: 0.01,
+                def: 0
+            }]
+    }
 ]

@@ -46,15 +46,25 @@ export default class Augment extends React.Component {
             ops: value
         })
     }
-    handleNum = (event) => {
-        this.setState({
-            finalnum: event.target.value
-        })
-    }
     handleFinalClick = () => {
-        socket.emit('augment', { "dir": this.state.dir, "ops": this.state.ops, "num": this.state.finalnum })
-        alert('Config saved :)')
-        window.location.href = '/'
+        var flag = true
+        if (!this.state.finalnum) {
+            alert('Enter num plz')
+            flag = false
+        }
+        if (!this.state.ops) {
+            alert('Re-select the operations plz')
+            flag = false
+            this.handleActive(-1)
+        }
+        if (flag) {
+            socket.emit('augment', { "file": this.state.filename, "data": { "dir": this.state.dir, "ops": this.state.ops, "num": this.state.finalnum } })
+            alert('Config saved :)')
+            window.location.href = '/'
+            localStorage.removeItem('page')
+            localStorage.removeItem('dir')
+            localStorage.removeItem('max')
+        }
     }
 
     render() {
@@ -95,17 +105,23 @@ export default class Augment extends React.Component {
                             <TextField
                                 id="standard-number"
                                 label="Final num of images"
-                                name="filval"
                                 type="number"
-                                defaultValue={this.state.max}
                                 variant="outlined"
-                                onChange={this.handleNum}
+                                onChange={(e) => { this.setState({ finalnum: e.target.value }) }}
+                            />
+                            <TextField
+                                label="File name without extension"
+                                type="text"
+                                variant="outlined"
+                                style={{ marginLeft: '20px' }}
+                                onChange={(e) => { this.setState({ filename: e.target.value }) }}
                             />
                             <Button
                                 variant="contained"
                                 color="primary"
                                 style={{ marginLeft: '20px' }}
                                 onClick={this.handleFinalClick}
+                                disabled={!this.state.finalnum || !this.state.filename}
                             > Confirm </Button>
                         </div>
                         {
