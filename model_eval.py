@@ -13,6 +13,8 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.applications import EfficientNetB0
 
 import mlflow
+import pickle
+import cv2
 
 # n = no. of classes
 def get_confusion_matrix(true_labels, pred_labels,n):
@@ -132,7 +134,7 @@ def predict_to_csv(img_path, model_path = "final_model_test.h5"):
     model = tf.keras.models.load_model(model_path)
     with open('mapping.pickle', 'rb') as handle:
         mapping = pickle.load(handle)
-    sign_names = pd.read_csv('signnames_added_classes.csv')
+    sign_names = pd.read_csv('signnames.csv')
 
     IMG_SIZE = 224
     NUM_CLASSES = 48
