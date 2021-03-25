@@ -59,6 +59,20 @@ def handle_input(images):
     file.close()
     return emit('predict',pieValues)
 
+@socketio.on('results')
+def handle_input(results):
+    r = open("./run_latest/conf_mat.png", 'rb')
+    matrixValues=[]
+    with open('./run_latest/classification_report.csv') as file:
+        reader = csv.DictReader(file, delimiter=',')
+        for index, row in enumerate(reader):
+            matrixValues.append({'precision':row['precision'],'recall':row['recall'],'f1_score':row['f1-score'],'support':row['support']})
+    file.close()
+    
+    data = r.read()
+    emit('results',{"img": data,"matrix": matrixValues})
+    r.close()
+
 @socketio.on('dirlist')
 def handle_input():
     classnames = []
