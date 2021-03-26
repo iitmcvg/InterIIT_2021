@@ -7,12 +7,15 @@ data-eval
 
 train
 train_augmented
+test
 mlruns
+run_latest
 
 __pycache__
 *.json
 *.h5
 predict_backend.csv
+combined_predict.csv
 *.Identifier
 
 frontend/node_modules
