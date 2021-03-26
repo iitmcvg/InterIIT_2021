@@ -17,7 +17,7 @@ import cv2
 from PIL import Image
 import mlflow
 
-def occlusion(model, image, label, occ_size=50, occ_stride=50, occ_pixel=0.5):
+def occlusion(model, image, label, occ_size=5, occ_stride=10, occ_pixel=0.5):
     
     with open('mapping.pickle', 'rb') as handle:
         mapping = pickle.load(handle)
@@ -77,7 +77,7 @@ def occlusion_maps(model, test_dir, occ_map_classes, run_id, img_paths=None):
         print(label, mapping[pred_label])
         
         plt.figure()
-        heatmap, prob_no_occ = occlusion(model, image , label , 14, 10)
+        heatmap, prob_no_occ = occlusion(model, image , label , 5, 10)
         imgplot = sns.heatmap(heatmap, xticklabels=False, yticklabels=False, vmax=prob_no_occ)
 
         figure = imgplot.get_figure()    

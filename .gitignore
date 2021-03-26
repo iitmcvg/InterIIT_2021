@@ -20,3 +20,6 @@ combined_predict.csv
 
 frontend/node_modules
 node_modules
+
+npm-debug.log
+mydb.sqlite

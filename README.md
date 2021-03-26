@@ -121,4 +121,10 @@ mlflow server \
 --default-artifact-root gs://mlflow_artifacts_storage/artifacts/ \
 --host 0.0.0.0
 ```
+For local run folder with SQLite database
+```
+mlflow server --backend-store-uri sqlite:///mydb.sqlite \
+  --default-artifact-root ./mlruns \
+  --port 8000
+```
 Use `mlflow.set_tracking_uri("https://35.198.166.98:5000") ` in code to log to a remote mlflow server
