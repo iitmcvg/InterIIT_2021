@@ -55,6 +55,6 @@ def outlier_detection(test_data_dir, model_path):
         clf = LocalOutlierFactor(n_neighbors=20)
         y_pred = clf.fit_predict(X)
         outlier_index = where(y_pred == -1)
-        print("For class id ", folder, " ", img_paths[outlier_index] "seems to be outliers")
+        print("For class id ", folder, " ", img_paths[outlier_index], "seems to be outliers")
 
 
