@@ -67,7 +67,7 @@ def handle_input(results):
     pca = open("./run_latest/pca_analysis.png", 'rb')
     matrixValues=[]
 
-    with open('combined_classification.csv', 'w', newline='') as outcsv:
+    with open('./run_latest/combined_classification.csv', 'w', newline='') as outcsv:
         writer = csv.DictWriter(outcsv, fieldnames = ["SignName","precision","recall","f1-score","support"])
         writer.writeheader()
 
@@ -76,12 +76,10 @@ def handle_input(results):
             writer.writerows({'SignName': row[0],'precision': row[1],"recall": row[2],"f1-score": row[3],"support": row[4]} for row in reader)
         incsv.close()
     outcsv.close()
-    with open('combined_classification.csv') as file:
+    with open('./run_latest/combined_classification.csv') as file:
         reader = csv.DictReader(file, delimiter=',')
         for index, row in enumerate(reader):
             matrixValues.append({'SignName':row['SignName'],'precision':row['precision'],'recall':row['recall'],'f1_score':row['f1-score'],'support':row['support']})
-
-    file.close()
 
     file.close()
     pca_analysis=pca.read()
@@ -104,29 +102,32 @@ def handle_input(results):
 
 @socketio.on('visualize')
 def handle_input(results):
-    r = open("run_latest/occ_maps/occ_map_2.png", 'rb')
-    pca = open("run_latest/occ_maps/occ_map_5.png", 'rb')
 
-    file.close()
-
-    file.close()
-    pca_analysis=pca.read()
-    data = r.read()
-    train = open("run_latest/interm_outputs/2/block2a_activation.jpg",'rb')
-    finetune_acc = train.read()
+    train = open("run_latest/interm_outputs/2/block1a_activation.jpg",'rb')
+    block_1a = train.read()
     train.close()
-    train = open('run_latest/interm_outputs/2/block3a_activation.jpg','rb')
-    finetune_loss = train.read()
+    train = open('run_latest/interm_outputs/2/block2a_activation.jpg','rb')
+    block_2a = train.read()
+    train.close()
+    train = open("run_latest/interm_outputs/5/block1a_activation.jpg",'rb')
+    block_51a = train.read()
     train.close()
     train = open('run_latest/interm_outputs/5/block2a_activation.jpg','rb')
-    full_loss = train.read()
+    block_52a = train.read()
     train.close()
-    train = open('run_latest/interm_outputs/5/block3a_activation.jpg','rb')
-    full_acc = train.read()
+    train = open("run_latest/interm_outputs/2/block1a_activation.jpg",'rb')
+    block_1a = train.read()
     train.close()
-    emit('results',{"img": data,"pca": pca_analysis,'finetune_acc': finetune_acc,'finetune_loss': finetune_loss,'full_loss': full_loss,'full_acc': full_acc})
-    r.close()
-    pca.close()
+    train = open('run_latest/interm_outputs/2/block2a_activation.jpg','rb')
+    block_2a = train.read()
+    train.close()
+    train = open('run_latest/occ_maps/occ_map_2.png','rb')
+    occ_2 = train.read()
+    train.close()
+    train = open('run_latest/occ_maps/occ_map_2.png','rb')
+    occ_5 = train.read()
+    train.close()
+    emit('visualize',{'occ_2': occ_2,'occ_5': occ_2,'block_1a': block_1a,'block_2a': block_2a,'block_51a': block_51a,'block_52a': block_52a})
 
 @socketio.on('dirlist')
 def handle_input():
