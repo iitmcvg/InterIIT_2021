@@ -13,6 +13,7 @@ __pycache__
 *.json
 *.h5
 predict_backend.csv
+*.Identifier
 
 frontend/node_modules
 node_modules
