@@ -247,4 +247,4 @@ def handle_input(optionsDict):
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = 'BlaBlaBla'
     CORS(app)
-    socketio.run(app)
+    socketio.run(app, debug=True)
