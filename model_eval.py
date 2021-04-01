@@ -18,6 +18,9 @@ import mlflow
 import pickle
 import cv2
 
+mlflow.set_tracking_uri("sqlite:///mydb.sqlite")
+
+
 # n = no. of classes
 def get_confusion_matrix(true_labels, pred_labels,n):
     
@@ -101,8 +104,9 @@ def get_pca_plot(test_dataset_dir, model, classes):
 
 def model_eval_fns(test_dataset_dir, model_path, run_id):
 
-    with open('classes.pickle', 'rb') as handle:
-        classes = pickle.load(handle)
+    sign_names = pd.read_csv('signnames_added_classes.csv')
+    classes = dict(zip(list(sign_names['ClassId']), list(sign_names['SignName'])))
+
     IMG_SIZE=224
     NUM_CLASSES=48
 

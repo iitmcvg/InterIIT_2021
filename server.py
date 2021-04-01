@@ -124,10 +124,10 @@ def handle_input(results):
     train = open('run_latest/occ_maps/occ_map_2.png','rb')
     occ_2 = train.read()
     train.close()
-    train = open('run_latest/occ_maps/occ_map_2.png','rb')
+    train = open('run_latest/occ_maps/occ_map_5.png','rb')
     occ_5 = train.read()
     train.close()
-    emit('visualize',{'occ_2': occ_2,'occ_5': occ_2,'block_1a': block_1a,'block_2a': block_2a,'block_51a': block_51a,'block_52a': block_52a})
+    emit('visualize',{'occ_2': occ_2,'occ_5': occ_5,'block_1a': block_1a,'block_2a': block_2a,'block_51a': block_51a,'block_52a': block_52a})
 
 @socketio.on('dirlist')
 def handle_input():

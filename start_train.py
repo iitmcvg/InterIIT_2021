@@ -20,6 +20,8 @@ from tensorflow.keras.callbacks import ModelCheckpoint,LearningRateScheduler
 
 import mlflow.tensorflow
 
+mlflow.set_tracking_uri("sqlite:///mydb.sqlite")
+
 mlflow.tensorflow.autolog()
 
 def save_train_curves(history, path):
@@ -90,6 +92,7 @@ def train_classifier(train_data_root, test_data_root, train_type='pretrained', c
          -> 2layer_conv
          -> resnet
     '''
+    print("Start training")
     folder_path = "run_latest/"
     os.makedirs(folder_path, exist_ok=True)
     with mlflow.start_run(run_name='Classifier train') as run:

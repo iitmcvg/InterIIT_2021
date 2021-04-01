@@ -17,6 +17,8 @@ import cv2
 from PIL import Image
 import mlflow
 
+mlflow.set_tracking_uri("sqlite:///mydb.sqlite")
+
 def occlusion(model, image, label, occ_size=5, occ_stride=10, occ_pixel=0.5):
     
     with open('mapping.pickle', 'rb') as handle:
